@@ -1,3 +1,5 @@
+# Upstream: https://src.fedoraproject.org/rpms/mesa/tree/f38
+
 %ifnarch s390x
 %global with_hardware 1
 %global with_vulkan_hw 1
