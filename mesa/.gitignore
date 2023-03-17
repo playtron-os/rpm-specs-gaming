@@ -1,0 +1,8 @@
+*.jx
+*.src.rpm
+.build*
+/mesa-*.tar.bz2
+/mesa-*.tar.xz
+x86_64/
+results_mesa/
+mesa-*/
