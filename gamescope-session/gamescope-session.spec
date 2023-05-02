@@ -1,8 +1,8 @@
 Name: gamescope-session
 # GitVersion versioning is to show how many commits have been made to the git repository.
-Version: 0.1.0+119
+Version: 0.1.0+120
 Release: 1%{?dist}
-%define ver a82c74982d52264056b4f1cc372478a604a3526f
+%define ver d0a2738e24e3f74fc12278825ef083aa26587afc
 Summary: Steam Big Picture Mode session based on gamescope for ChimeraOS
 License: MIT
 URL: https://github.com/ChimeraOS/gamescope-session
@@ -43,5 +43,8 @@ cp gamescope-session-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamescope-se
 /usr/share/wayland-sessions/gamescope-session.desktop
 
 %changelog
+* Wed May 03 2023 Luke Short <ekultails@gmail.com> 0.1.0+120-1
+- Update version
+
 * Wed Apr 12 2023 Luke Short <ekultails@gmail.com> 0.1.0+119-1
 - Initial RPM spec created
