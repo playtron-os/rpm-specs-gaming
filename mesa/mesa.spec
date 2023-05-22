@@ -38,7 +38,6 @@
 
 %ifnarch s390x
 %if !0%{?rhel}
-%global with_r300 1
 %global with_r600 1
 %endif
 %global with_radeonsi 1
@@ -55,7 +54,7 @@
 
 Name:           mesa
 Summary:        Mesa graphics libraries
-%global ver 23.0.0
+%global ver 23.1.1
 Version:        %{lua:ver = string.gsub(rpm.expand("%{ver}"), "-", "~"); print(ver)}
 Release:        %autorelease
 License:        MIT
@@ -346,8 +345,11 @@ export RUSTFLAGS="%build_rustflags"
   -Dplatforms=x11,wayland \
   -Ddri3=enabled \
   -Dosmesa=true \
+  -Dandroid-libbacktrace=disabled \
+  -Dlmsensors=disabled \
+  -Dlibunwind=disabled \
 %if 0%{?with_hardware}
-  -Dgallium-drivers=swrast,virgl,nouveau%{?with_r300:,r300}%{?with_crocus:,crocus}%{?with_i915:,i915}%{?with_iris:,iris}%{?with_vmware:,svga}%{?with_radeonsi:,radeonsi}%{?with_r600:,r600}%{?with_freedreno:,freedreno}%{?with_etnaviv:,etnaviv}%{?with_tegra:,tegra}%{?with_vc4:,vc4}%{?with_v3d:,v3d}%{?with_kmsro:,kmsro}%{?with_lima:,lima}%{?with_panfrost:,panfrost}%{?with_vulkan_hw:,zink} \
+  -Dgallium-drivers=swrast,virgl,nouveau%{?with_crocus:,crocus}%{?with_i915:,i915}%{?with_iris:,iris}%{?with_vmware:,svga}%{?with_radeonsi:,radeonsi}%{?with_r600:,r600}%{?with_freedreno:,freedreno}%{?with_etnaviv:,etnaviv}%{?with_tegra:,tegra}%{?with_vc4:,vc4}%{?with_v3d:,v3d}%{?with_kmsro:,kmsro}%{?with_lima:,lima}%{?with_panfrost:,panfrost}%{?with_vulkan_hw:,zink} \
 %else
   -Dgallium-drivers=swrast,virgl \
 %endif
@@ -494,9 +496,6 @@ popd
 %{_libdir}/dri/virtio_gpu_dri.so
 
 %if 0%{?with_hardware}
-%if 0%{?with_r300}
-%{_libdir}/dri/r300_dri.so
-%endif
 %if 0%{?with_radeonsi}
 %if 0%{?with_r600}
 %{_libdir}/dri/r600_dri.so
@@ -592,9 +591,6 @@ popd
 %if 0%{?with_vdpau}
 %files vdpau-drivers
 %{_libdir}/vdpau/libvdpau_nouveau.so.1*
-%if 0%{?with_r300}
-%{_libdir}/vdpau/libvdpau_r300.so.1*
-%endif
 %if 0%{?with_r600}
 %{_libdir}/vdpau/libvdpau_r600.so.1*
 %endif
