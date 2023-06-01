@@ -30,11 +30,8 @@ cp gamingos-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamingos-scri
 
 %post
 /usr/bin/systemctl daemon-reload
-# Manually enable the service for rpm-ostree distributions where systemd is not available during the build process.
-ln -s /usr/lib/systemd/system/resize-root-file-system.service /etc/systemd/system/multi-user.target.wants/resize-root-file-system.service
 
 %postun
-rm -f /etc/systemd/system/multi-user.target.wants/resize-root-file-system.service
 /usr/bin/systemctl daemon-reload
 
 %changelog
