@@ -1,12 +1,13 @@
 Name: gamingos-scripts
 Version: 0.1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define ver 43a0f458644648fab499dfd2035be7238e45999b
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/LukeShortCloud/gamingos-scripts
 Source0: https://github.com/LukeShortCloud/gamingos-scripts/archive/%{ver}.zip
 BuildArch: noarch
+Requires: cloud-utils-growpart
 
 %description
 %{summary}.
@@ -37,5 +38,8 @@ rm -f /etc/systemd/system/multi-user.target.wants/resize-root-file-system.servic
 /usr/bin/systemctl daemon-reload
 
 %changelog
-* Tue May 23 2023 Luke Short <ekultails@gmail.com> 0.1.0
+* Thu Jun 01 2023 Luke Short <ekultails@gmail.com> 0.1.0-2
+- Add cloud-utils-growpart as a required dependency
+
+* Tue May 23 2023 Luke Short <ekultails@gmail.com> 0.1.0-1
 - Initial RPM spec created
