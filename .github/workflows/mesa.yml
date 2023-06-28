@@ -8,7 +8,7 @@ on:
       - 'mesa/**'
 jobs:
   build:
-    uses: LukeShortCloud/rpm-specs-gaming/.github/workflows/all.yml@main
+    uses: playtron-os/rpm-specs-gaming/.github/workflows/all.yml@main
   upload:
     name: Upload mesa source RPM to Fedora Copr
     runs-on: ubuntu-20.04

@@ -1,11 +1,11 @@
-Name: gamingos-scripts
+Name: playtron-os-scripts
 Version: 0.2.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define ver 0.2.0
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
-URL: https://github.com/LukeShortCloud/gamingos-scripts
-Source0: https://github.com/LukeShortCloud/gamingos-scripts/archive/refs/tags/%{ver}.tar.gz
+URL: https://github.com/playtron-os/playtron-os-scripts
+Source0: https://github.com/playtron-os/playtron-os-scripts/archive/refs/tags/%{ver}.tar.gz
 BuildArch: noarch
 Requires: cloud-utils-growpart
 
@@ -17,13 +17,13 @@ Requires: cloud-utils-growpart
 
 %install
 mkdir -p %{buildroot}/etc/sysctl.d/
-cp -Rv gamingos-scripts-%{ver}/etc/sysctl.d/* %{buildroot}/etc/sysctl.d/
+cp -Rv playtron-os-scripts-%{ver}/etc/sysctl.d/* %{buildroot}/etc/sysctl.d/
 mkdir -p %{buildroot}/usr/lib/systemd/system/
-cp -Rv gamingos-scripts-%{ver}/lib/systemd/system/* %{buildroot}/usr/lib/systemd/system/
+cp -Rv playtron-os-scripts-%{ver}/lib/systemd/system/* %{buildroot}/usr/lib/systemd/system/
 mkdir -p %{buildroot}/usr/sbin/
-cp -Rv gamingos-scripts-%{ver}/sbin/* %{buildroot}/usr/sbin/
-mkdir -p %{buildroot}/usr/share/licenses/gamingos-scripts/
-cp gamingos-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamingos-scripts/LICENSE
+cp -Rv playtron-os-scripts-%{ver}/sbin/* %{buildroot}/usr/sbin/
+mkdir -p %{buildroot}/usr/share/licenses/playtron-os-scripts/
+cp playtron-os-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/playtron-os-scripts/LICENSE
 
 %files
 /etc/sysctl.d/50-swappiness.conf
@@ -31,7 +31,7 @@ cp gamingos-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamingos-scri
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/sbin/create-swap.sh
 /usr/sbin/resize-root-file-system.sh
-/usr/share/licenses/gamingos-scripts/LICENSE
+/usr/share/licenses/playtron-os-scripts/LICENSE
 
 %post
 /usr/bin/systemctl daemon-reload
@@ -40,6 +40,10 @@ cp gamingos-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamingos-scri
 /usr/bin/systemctl daemon-reload
 
 %changelog
+* Tue Jun 27 2023 Luke Short <ekultails@gmail.com> 0.2.0-2
+- Change git repository URL
+- Change RPM name from "gamingos-scripts" to "playtron-os-scripts"
+
 * Thu Jun 01 2023 Luke Short <ekultails@gmail.com> 0.2.0-1
 - Add the create swap files
 - Change source code version to use a tag instead of a commit hash
