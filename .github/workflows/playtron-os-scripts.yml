@@ -1,16 +1,16 @@
 ---
-name: Upload gamingos-scripts source RPM
+name: Upload playtron-os-scripts source RPM
 on:
   push:
     branches:
       - main
     paths:
-      - 'gamingos-scripts/**'
+      - 'playtron-os-scripts/**'
 jobs:
   build:
-    uses: LukeShortCloud/rpm-specs-gaming/.github/workflows/all.yml@main
+    uses: playtron-os/rpm-specs-gaming/.github/workflows/all.yml@main
   upload:
-    name: Upload gamingos-scripts source RPM to Fedora Copr
+    name: Upload playtron-os-scripts source RPM to Fedora Copr
     runs-on: ubuntu-20.04
     container:
       image: fedora:38
@@ -27,11 +27,11 @@ jobs:
       - name: Create the necessary RPM build directories
         run: mkdir -p ~/rpmbuild/SOURCES/
       - name: Copy interal source files
-        run: cp ${GITHUB_WORKSPACE}/gamingos-scripts/* ~/rpmbuild/SOURCES/
+        run: cp ${GITHUB_WORKSPACE}/playtron-os-scripts/* ~/rpmbuild/SOURCES/
       - name: Download external source files
-        run: spectool -g -R ${GITHUB_WORKSPACE}/gamingos-scripts/*.spec
+        run: spectool -g -R ${GITHUB_WORKSPACE}/playtron-os-scripts/*.spec
       - name: Build the source RPM
-        run: rpmbuild -bs ${GITHUB_WORKSPACE}/gamingos-scripts/*.spec
+        run: rpmbuild -bs ${GITHUB_WORKSPACE}/playtron-os-scripts/*.spec
       - name: Create the local configuration directory
         run: mkdir ~/.config/
       - name: Create the copr-cli configuration file
@@ -44,4 +44,4 @@ jobs:
           copr_url = https://copr.fedorainfracloud.org
           EOF
       - name: Upload the source RPM to Fedora Copr
-        run: copr-cli build gaming ~/rpmbuild/SRPMS/gamingos-scripts-*.src.rpm
+        run: copr-cli build gaming ~/rpmbuild/SRPMS/playtron-os-scripts-*.src.rpm
