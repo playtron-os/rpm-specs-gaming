@@ -39,7 +39,7 @@ jobs:
           cat <<EOF > ~/.config/copr
           [copr-cli]
           login = ${FEDORA_COPR_LOGIN}
-          username = ekultails
+          username = playtron
           token = ${FEDORA_COPR_TOKEN}
           copr_url = https://copr.fedorainfracloud.org
           EOF
