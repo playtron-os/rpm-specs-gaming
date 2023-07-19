@@ -18,7 +18,7 @@ jobs:
         run: dnf install -y copr-cli rpm-build rpmdevtools
       - name: Create the necessary RPM build directories
         run: mkdir -p ~/rpmbuild/SOURCES/
-      - name: Copy interal source files
+      - name: Copy internal source files
         run: cp ${GITHUB_WORKSPACE}/gamescope-session/* ~/rpmbuild/SOURCES/
       - name: Download external source files
         run: spectool -g -R ${GITHUB_WORKSPACE}/gamescope-session/gamescope-session.spec

@@ -1,0 +1,40 @@
+---
+name: Test kernel
+on:
+  push:
+    branches:
+      - !main
+    paths:
+      - kernel.sh
+jobs:
+  test:
+    name: Test kernel RPM build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          # The root file system needs space for the container.
+          root-reserve-mb: 15120
+          temp-reserve-mb: 5120
+          # Lower the swap size to 1 GB.
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+      - uses: actions/checkout@v3
+      - name: Change directory
+        run: cd $GITHUB_WORKSPACE
+      - name: Create a container
+        run: docker run -d -v $(pwd):/root --name fedora38 fedora:38 sleep infinity
+      # The Linux kernel is currently handled via a script.
+      # When we get to the point where we need to add custom patches,
+      # we will add it as an additional directory similar to the existing RPMs.
+      - name: Build the Linux kernel source RPM
+        run: docker exec fedora38 /root/kernel.sh
+      - name: Build the Linux kernel binary RPMs
+        run: docker exec fedora38 rpmbuild -bb /root/kernel/kernel.spec
+      - name: Install RPMs
+        run: docker exec fedora38 dnf -y install /root/rpmbuild/RPMS/*/*.rpm
