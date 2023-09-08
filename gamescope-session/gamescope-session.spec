@@ -1,22 +1,19 @@
 Name: gamescope-session
 # GitVersion versioning is to show how many commits have been made to the git repository.
-Version: 0.1.0+120
+Version: 0.1.0+190
 Release: 1%{?dist}
-%define ver d0a2738e24e3f74fc12278825ef083aa26587afc
+%define ver 42751dd77d6ae17163e20983b227d3a05a4217a0
 Summary: Steam Big Picture Mode session based on gamescope for ChimeraOS
 License: MIT
 URL: https://github.com/ChimeraOS/gamescope-session
 Source0: https://github.com/ChimeraOS/gamescope-session/archive/%{ver}.zip
+Requires: gamescope
 
 %description
 %{summary}.
 
 %prep
 %setup -q -c
-# RPM builds will fail with an error if the shebang of a Python program does not explicility say
-# "python2" or "python3" ("python" is not allowed).
-sed -i s'/env\ python/env\ python3/'g gamescope-session-%{ver}/usr/share/gamescope-session/gamescope-session-script
-sed -i s'/env\ python/env\ python3/'g gamescope-session-%{ver}/usr/bin/steam-http-loader
 
 %install
 mkdir -p %{buildroot}/usr/share/licenses/gamescope-session
@@ -30,7 +27,9 @@ cp gamescope-session-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamescope-se
 /usr/bin/jupiter-biosupdate
 /usr/bin/steam-http-loader
 /usr/bin/steamos-polkit-helpers/jupiter-biosupdate
+/usr/bin/steamos-polkit-helpers/steamos-select-branch
 /usr/bin/steamos-polkit-helpers/steamos-update
+/usr/bin/steamos-select-branch
 /usr/bin/steamos-session-select
 /usr/bin/steamos-update
 /usr/lib/systemd/user/gamescope-session.service
@@ -43,6 +42,9 @@ cp gamescope-session-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamescope-se
 /usr/share/wayland-sessions/gamescope-session.desktop
 
 %changelog
+* Fri Sep 08 2023 Alesh Slovak <aleshslovak@gmail.com> 0.1.0+190-1
+- Update version
+
 * Wed May 03 2023 Luke Short <ekultails@gmail.com> 0.1.0+120-1
 - Update version
 
