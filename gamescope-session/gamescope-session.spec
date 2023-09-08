@@ -7,7 +7,7 @@ Summary: Steam Big Picture Mode session based on gamescope for ChimeraOS
 License: MIT
 URL: https://github.com/ChimeraOS/gamescope-session
 Source0: https://github.com/ChimeraOS/gamescope-session/archive/%{ver}.zip
-Requires: gamescope steam
+Requires: gamescope
 
 %description
 %{summary}.
