@@ -9,34 +9,30 @@ jobs:
   build:
     name: Build all RPMs in a Fedora container
     runs-on: ubuntu-20.04
-    container:
-      image: fedora:38
     steps:
+      - name: Check space before clean up
+        run: df -h
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          # The root file system needs space for the container.
+          root-reserve-mb: 15120
+          temp-reserve-mb: 5120
+          # Lower the swap size to 1 GB.
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+      - name: Check space after clean up
+        run: df -h
       - uses: actions/checkout@v3
       - name: Change directory
         run: cd $GITHUB_WORKSPACE
-      - name: Install RPM build dependencies
-        run: dnf install -y rpm-build rpmdevtools
-      - name: Create the necessary RPM build directories
-        run: mkdir -p ~/rpmbuild/SOURCES/
-      - name: Install the DNF build dependencies plugin
-        run: dnf -y install 'dnf-command(builddep)'
-      - name: Build RPMs
-        run: |
-          # Each RPM spec is stored in its own directory in this repository.
-          for pkg in $(ls -d -1 */ | cut -d\/ -f1)
-              do cd ${pkg}
-              # Copy internal source files.
-              cp ./* ~/rpmbuild/SOURCES/
-              # Download external source files.
-              spectool -g -R *.spec
-              # Build the source RPM.
-              rpmbuild -bs *.spec
-              # Install the required build dependencies.
-              dnf builddep -y *.spec
-              # Build the binary RPM.
-              rpmbuild -bb *.spec
-              cd ..
-          done
-      - name: Install RPMs
-        run: dnf -y install ~/rpmbuild/RPMS/*/*.rpm
+      - name: Create a container
+        run: docker run -d -v $(pwd):/root --name fedora38 fedora:38 sleep infinity
+      - name: Build all of the RPMs
+        run: docker exec fedora38 /root/build_all.sh
+      - name: Check space at the end
+        run: df -h
