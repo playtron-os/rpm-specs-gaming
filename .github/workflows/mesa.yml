@@ -1,25 +1,17 @@
 ---
-name: Upload mesa source RPM
+name: Test mesa
 on:
   push:
     branches:
-      - main
+      - !main
     paths:
       - 'mesa/**'
 jobs:
-  build:
-    uses: playtron-os/rpm-specs-gaming/.github/workflows/all.yml@main
   upload:
-    name: Upload mesa source RPM to Fedora Copr
+    name: Test mesa RPM build
     runs-on: ubuntu-20.04
     container:
       image: fedora:38
-    env:
-      FEDORA_COPR_LOGIN: ${{ secrets.FEDORA_COPR_LOGIN }}
-      FEDORA_COPR_TOKEN: ${{ secrets.FEDORA_COPR_TOKEN }}
-    needs:
-      - build
-    if: ${{ always() && !cancelled() && needs.build.result == 'success' }}
     steps:
       - uses: actions/checkout@v3
       - name: Install RPM build dependencies
@@ -32,16 +24,11 @@ jobs:
         run: spectool -g -R ${GITHUB_WORKSPACE}/mesa/*.spec
       - name: Build the source RPM
         run: rpmbuild -bs ${GITHUB_WORKSPACE}/mesa/*.spec
-      - name: Create the local configuration directory
-        run: mkdir ~/.config/
-      - name: Create the copr-cli configuration file
-        run: |
-          cat <<EOF > ~/.config/copr
-          [copr-cli]
-          login = ${FEDORA_COPR_LOGIN}
-          username = playtron
-          token = ${FEDORA_COPR_TOKEN}
-          copr_url = https://copr.fedorainfracloud.org
-          EOF
-      - name: Upload the source RPM to Fedora Copr
-        run: copr-cli build gaming ~/rpmbuild/SRPMS/mesa-*.src.rpm
+      - name: Install the DNF build dependencies plugin
+        run: dnf -y install 'dnf-command(builddep)'
+      - name: Install the required build dependencies.
+        run: dnf builddep -y ${GITHUB_WORKSPACE}/mesa/mesa.spec
+      - name: Build the binary RPM
+        run: rpmbuild -bb ${GITHUB_WORKSPACE}/mesa/mesa.spec
+      - name: Install RPMs
+        run: dnf -y install ~/rpmbuild/RPMS/*/*.rpm
