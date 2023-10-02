@@ -3,7 +3,7 @@ name: Upload kernel source RPM
 on:
   push:
     branches:
-      - main
+      - kernel
     paths:
       - kernel.sh
 jobs:
