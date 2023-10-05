@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+#DELME!
+
+
 # Install generic RPM build dependencies.
 dnf install -y fedora-packager fedpkg grubby ncurses-devel pesign rpm-build rpmdevtools 'dnf-command(builddep)'
 # Download the kernel package repository. This requires first increasing the buffer size that git uses.
