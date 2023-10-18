@@ -1,7 +1,7 @@
 Name: playtron-os-scripts
-Version: 0.2.0
-Release: 2%{?dist}
-%define ver 0.2.0
+Version: 0.2.1
+Release: 1%{?dist}
+%define ver 0.2.1
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-scripts
@@ -40,6 +40,9 @@ cp playtron-os-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/playtron-o
 /usr/bin/systemctl daemon-reload
 
 %changelog
+* Wed Oct 18 2023 Luke Short <ekultails@gmail.com> 0.2.1-1
+- Update version
+
 * Tue Jun 27 2023 Luke Short <ekultails@gmail.com> 0.2.0-2
 - Change git repository URL
 - Change RPM name from "gamingos-scripts" to "playtron-os-scripts"
