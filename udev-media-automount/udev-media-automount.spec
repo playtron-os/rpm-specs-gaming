@@ -6,7 +6,7 @@ Release: 2%{?dist}
 Summary: udev rules for automatically mounting filesystems
 License: BSD-2-Clause
 URL: https://github.com/Ferk/udev-media-automount
-Source0: https://github.com/LukeShortCloud/udev-media-automount/archive/%{ver}.zip
+Source0: https://github.com/Ferk/udev-media-automount/archive/%{ver}.zip
 BuildRequires: make
 
 %description
@@ -50,6 +50,7 @@ fi
 %changelog
 * Wed Nov 29 2023 Luke Short <ekultails@gmail.com> 0.1.0+59-2
 - Do not run udevadm transactions without udevd running
+- Use the upstream URL for the source
 
 * Tue Nov 21 2023 Luke Short <ekultails@gmail.com> 0.1.0+59-1
 - Initial RPM spec created
