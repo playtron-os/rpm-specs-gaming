@@ -9,7 +9,7 @@ on:
 jobs:
   upload:
     name: Test mesa RPM build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     container:
       image: fedora:38
     steps:
