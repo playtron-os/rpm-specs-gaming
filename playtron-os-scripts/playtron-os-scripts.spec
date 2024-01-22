@@ -1,11 +1,10 @@
 Name: playtron-os-scripts
 Version: 0.3.1
 Release: 1%{?dist}
-%define ver 0.3.1
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-scripts
-Source0: https://github.com/playtron-os/playtron-os-scripts/archive/refs/tags/%{ver}.tar.gz
+Source0: https://github.com/playtron-os/playtron-os-scripts/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
 Requires: cloud-utils-growpart fio
 
@@ -17,13 +16,13 @@ Requires: cloud-utils-growpart fio
 
 %install
 mkdir -p %{buildroot}/etc/sysctl.d/
-cp -Rv playtron-os-scripts-%{ver}/etc/sysctl.d/* %{buildroot}/etc/sysctl.d/
+cp -Rv playtron-os-scripts-%{version}/etc/sysctl.d/* %{buildroot}/etc/sysctl.d/
 mkdir -p %{buildroot}/usr/bin/
-cp -Rv playtron-os-scripts-%{ver}/bin/* %{buildroot}/usr/bin/
+cp -Rv playtron-os-scripts-%{version}/bin/* %{buildroot}/usr/bin/
 mkdir -p %{buildroot}/usr/lib/systemd/system/
-cp -Rv playtron-os-scripts-%{ver}/lib/systemd/system/* %{buildroot}/usr/lib/systemd/system/
+cp -Rv playtron-os-scripts-%{version}/lib/systemd/system/* %{buildroot}/usr/lib/systemd/system/
 mkdir -p %{buildroot}/usr/share/licenses/playtron-os-scripts/
-cp playtron-os-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/playtron-os-scripts/LICENSE
+cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron-os-scripts/LICENSE
 
 %files
 /etc/sysctl.d/50-swappiness.conf
