@@ -1,7 +1,7 @@
 Name: playtron-os-scripts
-Version: 0.2.1
+Version: 0.3.0
 Release: 1%{?dist}
-%define ver 0.2.1
+%define ver 0.3.0
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-scripts
@@ -18,6 +18,8 @@ Requires: cloud-utils-growpart
 %install
 mkdir -p %{buildroot}/etc/sysctl.d/
 cp -Rv playtron-os-scripts-%{ver}/etc/sysctl.d/* %{buildroot}/etc/sysctl.d/
+mkdir -p %{buildroot}/usr/bin/
+cp -Rv playtron-os-scripts-%{ver}/bin/* %{buildroot}/usr/bin/
 mkdir -p %{buildroot}/usr/lib/systemd/system/
 cp -Rv playtron-os-scripts-%{ver}/lib/systemd/system/* %{buildroot}/usr/lib/systemd/system/
 mkdir -p %{buildroot}/usr/sbin/
@@ -27,6 +29,7 @@ cp playtron-os-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/playtron-o
 
 %files
 /etc/sysctl.d/50-swappiness.conf
+/usr/bin/hwctl
 /usr/lib/systemd/system/create-swap.service
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/sbin/create-swap.sh
@@ -40,6 +43,9 @@ cp playtron-os-scripts-%{ver}/LICENSE %{buildroot}/usr/share/licenses/playtron-o
 /usr/bin/systemctl daemon-reload
 
 %changelog
+* Mon Jan 22 2024 Alesh Slovak <aleshslovak@gmail.com> 0.3.0-1
+- Update version
+
 * Wed Oct 18 2023 Luke Short <ekultails@gmail.com> 0.2.1-1
 - Update version
 
