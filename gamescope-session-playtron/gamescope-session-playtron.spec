@@ -1,12 +1,10 @@
 Name: gamescope-session-playtron
-# GitVersion versioning is to show how many commits have been made to the git repository.
-Version: 0.1.0+10
+Version: 0.2.0
 Release: 1%{?dist}
-%define ver de109ba0b8db
 Summary: Playtron Session for PlaytronOS
-License: TBD
-URL: https://bitbucket.org/playtron-one/gamescope-session-playtron
-Source0: https://bitbucket.org/playtron-one/%{name}/get/%{ver}.tar.gz#/playtron-one-%{name}-%{ver}.tar.gz
+License: MIT
+URL: https://github.com/playtron-os/gamescope-session-playtron
+Source0: %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 Requires: gamescope
 Requires: gamescope-session
 Requires: playtron-app
@@ -19,18 +17,20 @@ Requires: brightnessctl
 %setup -q -c
 
 %install
-cp -Rv playtron-one-%{name}-%{ver}/usr/ %{buildroot}/
+cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 
 %files
 /usr/share/gamescope-session-plus/sessions.d/playtron
 /usr/share/wayland-sessions/gamescope-session-playtron.desktop
-/usr/bin/hwctl
 /usr/bin/jupiter-dock-updater
 /usr/bin/jupiter-biosupdate
 /usr/bin/steamos-update
 /usr/bin/playtronos-session-select
 
 %changelog
+* Mon Jan 22 2024 Alesh Slovak <aleshslovak@gmail.com> 0.2.0
+- Update to use GitHub repo
+
 * Wed Dec 13 2023 Alesh Slovak <aleshslovak@gmail.com> 0.1.0+10
 - Update version
 
