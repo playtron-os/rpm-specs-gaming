@@ -7,7 +7,7 @@ License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-scripts
 Source0: https://github.com/playtron-os/playtron-os-scripts/archive/refs/tags/%{ver}.tar.gz
 BuildArch: noarch
-Requires: cloud-utils-growpart
+Requires: cloud-utils-growpart fio
 
 %description
 %{summary}.
