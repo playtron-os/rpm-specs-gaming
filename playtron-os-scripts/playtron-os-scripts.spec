@@ -16,11 +16,7 @@ Requires: cloud-utils-growpart fio
 
 %install
 cp -Rv playtron-os-scripts-%{version}/etc/ %{buildroot}/
-
-mkdir -p %{buildroot}/usr/
-cp -Rv playtron-os-scripts-%{version}/bin/ %{buildroot}/usr/
-cp -Rv playtron-os-scripts-%{version}/lib/ %{buildroot}/usr/
-cp -Rv playtron-os-scripts-%{version}/share/ %{buildroot}/usr/
+cp -Rv playtron-os-scripts-%{version}/usr/ %{buildroot}/
 
 mkdir -p %{buildroot}/usr/share/licenses/playtron-os-scripts/
 cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron-os-scripts/
