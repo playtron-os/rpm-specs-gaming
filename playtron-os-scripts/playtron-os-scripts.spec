@@ -7,6 +7,7 @@ URL: https://github.com/playtron-os/playtron-os-scripts
 Source0: https://github.com/playtron-os/playtron-os-scripts/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
 Requires: cloud-utils-growpart fio
+BuildRequires: systemd-rpm-macros
 
 %description
 %{summary}.
@@ -37,10 +38,13 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
-/usr/bin/systemctl daemon-reload
+%systemd_post create-swap.service resize-root-file-system.service
+
+%preun
+%systemd_preun create-swap.service resize-root-file-system.service
 
 %postun
-/usr/bin/systemctl daemon-reload
+%systemd_postun create-swap.service resize-root-file-system.service
 
 %changelog
 * Thu Jan 25 2024 Alesh Slovak <aleshslovak@gmail.com> 0.4.0-1
