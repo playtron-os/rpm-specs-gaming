@@ -33,6 +33,7 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
+/usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
 /usr/share/licenses/playtron-os-scripts/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
