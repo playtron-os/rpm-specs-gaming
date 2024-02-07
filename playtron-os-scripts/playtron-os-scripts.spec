@@ -24,7 +24,6 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 
 %files
 /etc/gai.conf
-/etc/sudoers.d/playtron
 /etc/xdg/weston/weston.ini
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
@@ -38,6 +37,7 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
 /usr/share/licenses/playtron-os-scripts/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
+/usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
