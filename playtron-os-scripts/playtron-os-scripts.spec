@@ -30,6 +30,7 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /usr/bin/playtron-factory-reset
 /usr/bin/resize-root-file-system.sh
 /usr/lib/sysctl.d/50-swappiness.conf
+/usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/create-swap.service
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
