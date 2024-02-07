@@ -1,5 +1,5 @@
 Name: playtron-os-scripts
-Version: 0.4.0
+Version: 0.5.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
@@ -24,9 +24,11 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 
 %files
 /etc/gai.conf
+/etc/sudoers.d/playtron
 /etc/xdg/weston/weston.ini
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
+/usr/bin/playtron-factory-reset
 /usr/bin/resize-root-file-system.sh
 /usr/lib/sysctl.d/50-swappiness.conf
 /usr/lib/systemd/system/create-swap.service
@@ -48,6 +50,9 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 %systemd_postun create-swap.service resize-root-file-system.service
 
 %changelog
+* Wed Feb 7 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.0-1
+- Update version
+
 * Thu Jan 25 2024 Alesh Slovak <aleshslovak@gmail.com> 0.4.0-1
 - Update version
 
