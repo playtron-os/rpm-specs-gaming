@@ -1,5 +1,5 @@
 Name: playtron-os-scripts
-Version: 0.4.0
+Version: 0.5.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
@@ -27,8 +27,10 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /etc/xdg/weston/weston.ini
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
+/usr/bin/playtron-factory-reset
 /usr/bin/resize-root-file-system.sh
 /usr/lib/sysctl.d/50-swappiness.conf
+/usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/create-swap.service
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
@@ -36,6 +38,7 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
 /usr/share/licenses/playtron-os-scripts/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
+/usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
@@ -48,6 +51,9 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 %systemd_postun create-swap.service resize-root-file-system.service
 
 %changelog
+* Wed Feb 7 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.0-1
+- Update version
+
 * Thu Jan 25 2024 Alesh Slovak <aleshslovak@gmail.com> 0.4.0-1
 - Update version
 
