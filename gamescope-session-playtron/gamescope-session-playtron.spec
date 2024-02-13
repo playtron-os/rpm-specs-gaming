@@ -1,5 +1,5 @@
 Name: gamescope-session-playtron
-Version: 0.2.0
+Version: 0.2.1
 Release: 1%{?dist}
 Summary: Playtron Session for PlaytronOS
 License: MIT
@@ -7,7 +7,7 @@ URL: https://github.com/playtron-os/gamescope-session-playtron
 Source0: %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 Requires: gamescope
 Requires: gamescope-session
-Requires: playtron-app
+Requires: grid
 Requires: brightnessctl
 
 %description
@@ -28,6 +28,9 @@ cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 /usr/bin/playtronos-session-select
 
 %changelog
+* Tue Feb 13 2024 Alesh Slovak <aleshslovak@gmail.com> 0.2.1-1
+- Update version, update dependency name
+
 * Mon Jan 22 2024 Alesh Slovak <aleshslovak@gmail.com> 0.2.0
 - Update to use GitHub repo
 

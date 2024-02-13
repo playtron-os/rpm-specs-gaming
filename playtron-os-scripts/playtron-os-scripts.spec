@@ -1,5 +1,5 @@
 Name: playtron-os-scripts
-Version: 0.5.0
+Version: 0.5.1
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
@@ -51,6 +51,9 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 %systemd_postun create-swap.service resize-root-file-system.service
 
 %changelog
+* Tue Feb 13 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.1-1
+- Update version
+
 * Wed Feb 7 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.0-1
 - Update version
 
