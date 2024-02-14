@@ -1,10 +1,10 @@
-Name: playtron-os-scripts
-Version: 0.5.1
+Name: playtron-os-files
+Version: 0.5.2
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
-URL: https://github.com/playtron-os/playtron-os-scripts
-Source0: https://github.com/playtron-os/playtron-os-scripts/archive/refs/tags/%{version}.tar.gz
+URL: https://github.com/playtron-os/playtron-os-files
+Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
 Requires: cloud-utils-growpart fio parted
 BuildRequires: systemd-rpm-macros
@@ -16,11 +16,11 @@ BuildRequires: systemd-rpm-macros
 %setup -q -c
 
 %install
-cp -Rv playtron-os-scripts-%{version}/etc/ %{buildroot}/
-cp -Rv playtron-os-scripts-%{version}/usr/ %{buildroot}/
+cp -Rv playtron-os-files-%{version}/etc/ %{buildroot}/
+cp -Rv playtron-os-files-%{version}/usr/ %{buildroot}/
 
-mkdir -p %{buildroot}/usr/share/licenses/playtron-os-scripts/
-cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron-os-scripts/
+mkdir -p %{buildroot}/usr/share/licenses/playtron-os-files/
+cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron-os-files/
 
 %files
 /etc/gai.conf
@@ -36,7 +36,7 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
-/usr/share/licenses/playtron-os-scripts/LICENSE
+/usr/share/licenses/playtron-os-files/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
@@ -51,6 +51,11 @@ cp playtron-os-scripts-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtr
 %systemd_postun create-swap.service resize-root-file-system.service
 
 %changelog
+* Wed Feb 14 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.2-1
+- Update version
+- Change git repository URL
+- Change RPM name from "playtron-os-scripts" to "playtron-os-files"
+
 * Tue Feb 13 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.1-1
 - Update version
 
