@@ -8,6 +8,8 @@ Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{ve
 BuildArch: noarch
 Requires: cloud-utils-growpart fio parted
 BuildRequires: systemd-rpm-macros
+Obsoletes: playtron-os-scripts
+Conflicts: playtron-os-scripts
 
 %description
 %{summary}.
