@@ -1,12 +1,12 @@
 Name: playtron-os-files
-Version: 0.5.2
+Version: 0.6.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: cloud-utils-growpart fio parted
+Requires: clatd cloud-utils-growpart fio parted
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts
 Conflicts: playtron-os-scripts
@@ -27,16 +27,19 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %files
 /etc/gai.conf
 /etc/xdg/weston/weston.ini
+/usr/bin/clatd-ipv6-check
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
 /usr/bin/playtron-factory-reset
 /usr/bin/resize-root-file-system.sh
 /usr/lib/sysctl.d/50-swappiness.conf
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
+/usr/lib/systemd/system/clatd-ipv6-check.service
 /usr/lib/systemd/system/create-swap.service
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
+/usr/lib/udev/rules.d/50-block-scheduler.rules
 /usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
 /usr/share/licenses/playtron-os-files/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
@@ -53,6 +56,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_postun create-swap.service resize-root-file-system.service
 
 %changelog
+* Wed Feb 14 2024 Luke Short <ekultails@gmail.com> 0.6.0-1
+- Update version
+
 * Wed Feb 14 2024 Alesh Slovak <aleshslovak@gmail.com> 0.5.2-1
 - Update version
 - Change git repository URL
