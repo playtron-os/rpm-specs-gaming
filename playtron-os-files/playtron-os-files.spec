@@ -39,6 +39,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
+/usr/lib/udev/rules.d/50-block-scheduler.rules
 /usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
 /usr/share/licenses/playtron-os-files/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
