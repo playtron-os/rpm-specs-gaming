@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.6.1
+Version: 0.7.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
@@ -33,6 +33,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/playtron-factory-reset
 /usr/bin/resize-root-file-system.sh
 /usr/lib/sysctl.d/50-swappiness.conf
+/usr/lib/modules-load.d/controllers.conf
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/clatd-ipv6-check.service
 /usr/lib/systemd/system/create-swap.service
@@ -47,15 +48,19 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
-%systemd_post create-swap.service resize-root-file-system.service
+%systemd_post clatd-ipv6-check.service create-swap.service resize-root-file-system.service
 
 %preun
-%systemd_preun create-swap.service resize-root-file-system.service
+%systemd_preun clatd-ipv6-check.service create-swap.service resize-root-file-system.service
 
 %postun
-%systemd_postun create-swap.service resize-root-file-system.service
+%systemd_postun clatd-ipv6-check.service create-swap.service resize-root-file-system.service
 
 %changelog
+* Wed Feb 21 2024 Luke Short <ekultails@gmail.com> 0.7.0-1
+- Update version
+- Add clatd-ipv6-check.service to be managed by systemd macros
+
 * Tue Feb 20 2024 Luke Short <ekultails@gmail.com> 0.6.1-1
 - Update version
 
