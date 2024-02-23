@@ -1,6 +1,6 @@
 Name: playtron-os-files
 Version: 0.7.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-files
@@ -8,7 +8,7 @@ Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{ve
 BuildArch: noarch
 Requires: clatd cloud-utils-growpart fio parted
 BuildRequires: systemd-rpm-macros
-Obsoletes: playtron-os-scripts
+Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts
 
 %description
@@ -48,15 +48,22 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
-%systemd_post clatd-ipv6-check.service create-swap.service resize-root-file-system.service
+%systemd_post clatd-ipv6-check.service create-swap.service lightdm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_user_post playserve.service gamescope-dbus.service
 
 %preun
-%systemd_preun clatd-ipv6-check.service create-swap.service resize-root-file-system.service
+%systemd_preun clatd-ipv6-check.service create-swap.service lightdm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_user_preun playserve.service gamescope-dbus.service
 
 %postun
-%systemd_postun clatd-ipv6-check.service create-swap.service resize-root-file-system.service
+%systemd_postun clatd-ipv6-check.service create-swap.service lightdm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Thu Feb 22 2024 Luke Short <ekultails@gmail.com> 0.7.0-2
+- Add all of the managed system and user services
+- Add version to the obsoletes field
+
 * Wed Feb 21 2024 Luke Short <ekultails@gmail.com> 0.7.0-1
 - Update version
 - Add clatd-ipv6-check.service to be managed by systemd macros
