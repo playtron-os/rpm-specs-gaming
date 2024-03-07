@@ -55,9 +55,9 @@ cp ./LICENSE %{buildroot}/usr/share/licenses/python3-edl/
 /usr/bin/fhloaderparse
 /usr/bin/qc_diag.py
 /usr/bin/sierrakeygen.py
-/usr/lib/python3.11/site-packages/edlclient/*
-/usr/lib/python3.11/site-packages/edlclient-*.dist-info/*
-/usr/lib/python3.11/site-packages/Loaders/*
+/usr/lib/python3.*/site-packages/edlclient/*
+/usr/lib/python3.*/site-packages/edlclient-*.dist-info/*
+/usr/lib/python3.*/site-packages/Loaders/*
 /usr/share/licenses/python3-edl/LICENSE
 
 %changelog
