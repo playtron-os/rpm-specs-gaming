@@ -39,8 +39,8 @@ cd %{_builddir}/edl/
 rm -r -f \
   %{buildroot}/usr/LICENSE \
   %{buildroot}/usr/README.md \
-  %{buildroot}/usr/lib/python3.11/site-packages/Loaders/.git \
-  %{buildroot}/usr/lib/python3.11/site-packages/Loaders/.gitignore
+  %{buildroot}/usr/lib/python3.*/site-packages/Loaders/.git \
+  %{buildroot}/usr/lib/python3.*/site-packages/Loaders/.gitignore
 
 cp -Rv ./Drivers/*.rules %{buildroot}/etc/udev/rules.d/
 cp ./LICENSE %{buildroot}/usr/share/licenses/python3-edl/
