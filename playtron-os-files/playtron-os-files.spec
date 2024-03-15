@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.7.0
+Version: 0.7.1
 Release: 2%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
@@ -60,6 +60,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Mar 15 2024 Alesh Slovak <aleshslovak@gmail.com> 0.7.1-1
+- Update version
+
 * Thu Feb 22 2024 Luke Short <ekultails@gmail.com> 0.7.0-2
 - Add all of the managed system and user services
 - Add version to the obsoletes field
