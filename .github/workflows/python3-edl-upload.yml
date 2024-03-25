@@ -39,4 +39,4 @@ jobs:
           copr_url = https://copr.fedorainfracloud.org
           EOF
       - name: Upload the source RPM to Fedora Copr
-        run: copr-cli build gaming ~/rpmbuild/SRPMS/python3-edl-*.src.rpm
+        run: copr-cli build --exclude-chroot fedora-38-i386 --exclude-chroot fedora-39-i386 --exclude-chroot fedora-40-i386 gaming ~/rpmbuild/SRPMS/python3-edl-*.src.rpm
