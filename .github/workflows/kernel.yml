@@ -28,13 +28,13 @@ jobs:
       - name: Change directory
         run: cd $GITHUB_WORKSPACE
       - name: Create a container
-        run: docker run -d -v $(pwd):/root --name fedora38 fedora:38 sleep infinity
+        run: docker run -d -v $(pwd):/root --name fedora40 fedora:40 sleep infinity
       # The Linux kernel is currently handled via a script.
       # When we get to the point where we need to add custom patches,
       # we will add it as an additional directory similar to the existing RPMs.
       - name: Build the Linux kernel source RPM
-        run: docker exec fedora38 /root/kernel.sh
+        run: docker exec fedora40 /root/kernel.sh
       - name: Build the Linux kernel binary RPMs
-        run: docker exec fedora38 rpmbuild -bb /root/kernel/kernel.spec
+        run: docker exec fedora40 rpmbuild -bb /root/kernel/kernel.spec
       - name: Install RPMs
-        run: docker exec fedora38 dnf -y install /root/rpmbuild/RPMS/*/*.rpm
+        run: docker exec fedora40 dnf -y install /root/rpmbuild/RPMS/*/*.rpm
