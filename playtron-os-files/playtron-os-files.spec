@@ -1,6 +1,6 @@
 Name: playtron-os-files
 Version: 0.11.0.19
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
 URL: https://github.com/playtron-os/playtron-os-files
