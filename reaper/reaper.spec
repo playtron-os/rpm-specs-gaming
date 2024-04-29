@@ -5,7 +5,6 @@ Summary: A command to monitor and annotate a process tree
 License: MIT
 URL: https://github.com/playtron-os/reaper
 Source0: https://github.com/playtron-os/reaper/archive/refs/tags/%{version}.tar.gz
-BuildArch: x86_64
 BuildRequires: systemd-rpm-macros meson make gcc-c++
 
 %description
