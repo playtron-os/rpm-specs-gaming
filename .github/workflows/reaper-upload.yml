@@ -1,0 +1,42 @@
+---
+name: Upload reaper source RPM
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'reaper/**'
+jobs:
+  upload:
+    name: Upload reaper source RPM to Fedora Copr
+    runs-on: ubuntu-22.04
+    container:
+      image: fedora:38
+    env:
+      FEDORA_COPR_LOGIN: ${{ secrets.FEDORA_COPR_LOGIN }}
+      FEDORA_COPR_TOKEN: ${{ secrets.FEDORA_COPR_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install RPM build dependencies
+        run: dnf install -y copr-cli rpm-build rpmdevtools
+      - name: Create the necessary RPM build directories
+        run: mkdir -p ~/rpmbuild/SOURCES/
+      - name: Copy internal source files
+        run: cp ${GITHUB_WORKSPACE}/reaper/* ~/rpmbuild/SOURCES/
+      - name: Download external source files
+        run: spectool -g -R ${GITHUB_WORKSPACE}/reaper/*.spec
+      - name: Build the source RPM
+        run: rpmbuild -bs ${GITHUB_WORKSPACE}/reaper/*.spec
+      - name: Create the local configuration directory
+        run: mkdir ~/.config/
+      - name: Create the copr-cli configuration file
+        run: |
+          cat <<EOF > ~/.config/copr
+          [copr-cli]
+          login = ${FEDORA_COPR_LOGIN}
+          username = playtron
+          token = ${FEDORA_COPR_TOKEN}
+          copr_url = https://copr.fedorainfracloud.org
+          EOF
+      - name: Upload the source RPM to Fedora Copr
+        run: copr-cli build gaming ~/rpmbuild/SRPMS/reaper-*.src.rpm
