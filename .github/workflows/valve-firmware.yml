@@ -1,0 +1,34 @@
+---
+name: Test valve-firmware
+on:
+  push:
+    branches:
+      - !main
+    paths:
+      - 'valve-firmware/**'
+jobs:
+  test:
+    name: Test valve-firmware RPM build
+    runs-on: ubuntu-22.04
+    container:
+      image: fedora:40
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install RPM build dependencies
+        run: dnf install -y copr-cli rpm-build rpmdevtools
+      - name: Create the necessary RPM build directories
+        run: mkdir -p ~/rpmbuild/SOURCES/
+      - name: Copy internal source files
+        run: cp ${GITHUB_WORKSPACE}/valve-firmware/* ~/rpmbuild/SOURCES/
+      - name: Download external source files
+        run: spectool -g -R ${GITHUB_WORKSPACE}/valve-firmware/*.spec
+      - name: Build the source RPM
+        run: rpmbuild -bs ${GITHUB_WORKSPACE}/valve-firmware/*.spec
+      - name: Install the DNF build dependencies plugin
+        run: dnf -y install 'dnf-command(builddep)'
+      - name: Install the required build dependencies.
+        run: dnf builddep -y ${GITHUB_WORKSPACE}/valve-firmware/valve-firmware.spec
+      - name: Build the binary RPM
+        run: rpmbuild -bb ${GITHUB_WORKSPACE}/valve-firmware/valve-firmware.spec
+      - name: Install RPMs
+        run: dnf -y install ~/rpmbuild/RPMS/*/*.rpm
