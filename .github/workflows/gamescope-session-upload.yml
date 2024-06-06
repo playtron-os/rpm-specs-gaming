@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'gamescope-session/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload gamescope-session source RPM to Fedora Copr

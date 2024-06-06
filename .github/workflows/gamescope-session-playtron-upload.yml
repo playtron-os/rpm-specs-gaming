@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'gamescope-session-playtron/**'
+  workflow_dispatch:
 
 env:
   PACKAGE_NAME: gamescope-session-playtron

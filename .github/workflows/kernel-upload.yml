@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - kernel.sh
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload kernel source RPM to Fedora Copr

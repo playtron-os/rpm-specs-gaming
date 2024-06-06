@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'python3-edl/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload python3-edl source RPM to Fedora Copr

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'udev-media-automount/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload udev-media-automount source RPM to Fedora Copr
