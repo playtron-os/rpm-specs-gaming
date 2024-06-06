@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'mesa/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload mesa source RPM to Fedora Copr

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'valve-firmware/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload valve-firmware source RPM to Fedora Copr

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'playtron-os-files/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload playtron-os-files source RPM to Fedora Copr

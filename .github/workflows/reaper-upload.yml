@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'reaper/**'
+  workflow_dispatch:
 jobs:
   upload:
     name: Upload reaper source RPM to Fedora Copr
