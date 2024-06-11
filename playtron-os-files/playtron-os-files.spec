@@ -30,6 +30,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/clatd-ipv6-check
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
+/usr/bin/playtronos-update
 /usr/lib/modules-load.d/controllers.conf
 /usr/lib/os-release-playtron
 /usr/bin/playtron-factory-reset
@@ -42,10 +43,11 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/udev/rules.d/50-block-scheduler.rules
-/usr/lib/udev/rules.d/50-lenovo-legion-controller.rules
 /usr/share/licenses/playtron-os-files/LICENSE
 /usr/share/lightdm/lightdm.conf.d/55-playtron.conf
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
+/usr/share/polkit-1/rules.d/50-one.playtron.hwctl.rules
+/usr/share/polkit-1/rules.d/50-one.playtron.playtronos-update.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
