@@ -19,14 +19,14 @@ jobs:
       - name: Change directory
         run: cd $GITHUB_WORKSPACE
       - name: Create a container
-        run: docker run -d -v $(pwd):/root --name fedora38 fedora:38 sleep infinity
+        run: docker run -d -v $(pwd):/root --name fedora40 fedora:40 sleep infinity
       # The Linux kernel is currently handled via a script.
       # When we get to the point where we need to add custom patches,
       # we will add it as an additional directory similar to the existing RPMs.
       - name: Build the Linux kernel source RPM
-        run: docker exec fedora38 /root/kernel.sh | tee /tmp/kernel.log
+        run: docker exec fedora40 /root/kernel.sh | tee /tmp/kernel.log
       - name: Install copr-cli
-        run: docker exec fedora38 dnf install -y copr-cli
+        run: docker exec fedora40 dnf install -y copr-cli
       - name: Create the copr-cli configuration file
         run: |
           echo "[copr-cli]
@@ -38,4 +38,4 @@ jobs:
       # but the 64-bit build is backwards compatible with 32-bit programs.
       # Example source RPM path: /kernel/kernel-6.3.13-200.playtron.fc38.src.rpm
       - name: Upload the source RPM to Fedora Copr
-        run: docker exec fedora38 copr-cli --config /root/copr-config build --exclude-chroot fedora-38-i386 --exclude-chroot fedora-39-i386 gaming $(grep "Wrote:" /tmp/kernel.log  | cut -d" " -f2)
+        run: docker exec fedora40 copr-cli --config /root/copr-config build --exclude-chroot fedora-39-i386 gaming $(grep "Wrote:" /tmp/kernel.log  | cut -d" " -f2)
