@@ -12,7 +12,7 @@ jobs:
     name: Upload mesa source RPM to Fedora Copr
     runs-on: ubuntu-22.04
     container:
-      image: fedora:39
+      image: fedora:40
     env:
       FEDORA_COPR_LOGIN: ${{ secrets.FEDORA_COPR_LOGIN }}
       FEDORA_COPR_TOKEN: ${{ secrets.FEDORA_COPR_TOKEN }}
@@ -40,4 +40,4 @@ jobs:
           copr_url = https://copr.fedorainfracloud.org
           EOF
       - name: Upload the source RPM to Fedora Copr
-        run: copr-cli build gaming --exclude-chroot fedora-38-aarch64 --exclude-chroot fedora-38-i386 --exclude-chroot fedora-38-x86_64 ~/rpmbuild/SRPMS/mesa-*.src.rpm
+        run: copr-cli build gaming ~/rpmbuild/SRPMS/mesa-*.src.rpm

@@ -2,8 +2,8 @@
 name: Test python3-edl
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'python3-edl/**'
 jobs:

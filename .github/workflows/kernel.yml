@@ -2,8 +2,8 @@
 name: Test kernel
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - kernel.sh
 jobs:

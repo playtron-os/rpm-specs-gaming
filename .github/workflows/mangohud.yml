@@ -2,8 +2,8 @@
 name: Test mangohud
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'mangohud/**'
 jobs:
