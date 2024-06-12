@@ -2,8 +2,8 @@
 name: Test reaper
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'reaper/**'
 jobs:

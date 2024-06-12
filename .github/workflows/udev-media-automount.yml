@@ -2,8 +2,8 @@
 name: Test udev-media-automount
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'udev-media-automount/**'
 jobs:

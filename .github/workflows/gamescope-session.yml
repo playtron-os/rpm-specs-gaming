@@ -2,8 +2,8 @@
 name: Test gamescope-session
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'gamescope-session/**'
 jobs:

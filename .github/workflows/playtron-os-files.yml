@@ -2,8 +2,8 @@
 name: Test playtron-os-files
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'playtron-os-files/**'
 jobs:

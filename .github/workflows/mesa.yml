@@ -2,8 +2,8 @@
 name: Test mesa
 on:
   push:
-    branches:
-      - !main
+    branches-ignore:
+      - main
     paths:
       - 'mesa/**'
 jobs:
