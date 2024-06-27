@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.16.0.37
+Version: 0.16.1
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: Apache-2.0
@@ -32,7 +32,6 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/hwctl
 /usr/bin/playtronos-update
 /usr/lib/modules-load.d/controllers.conf
-/usr/lib/os-release-playtron
 /usr/bin/playtron-factory-reset
 /usr/bin/resize-root-file-system.sh
 /usr/lib/sysctl.d/50-swappiness.conf
@@ -63,6 +62,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Wed Jun 26 2024 Alesh Slovak <aleshslovak@gmail.com> 0.16.1-1
+- Update version
+
 * Tue Jun 11 2024 Alesh Slovak <aleshslovak@gmail.com> 0.16.0.37-1
 - Update version
 
