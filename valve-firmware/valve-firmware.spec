@@ -1,7 +1,7 @@
 Name: valve-firmware
 # There are two source packages that use a date version. Set the RPM version to mirror whichever source is newer.
 Version: 20231113.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Linux firmware files for the Steam Deck OLED
 License: GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/
@@ -36,7 +36,11 @@ mv usr/lib/firmware/cs35l41-dsp1-spk-{cali.bin,cali.wmfw}.xz %{buildroot}/%{_pre
 tar -xvf %{_sourcedir}/steamdeck-dsp-*-any.pkg.tar.zst -C %{buildroot}/
 rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildroot}/etc/wireplumber
 
+# Fix Steam Deck OLED Wi-Fi firmware with Linux >= 6.9 kernels.
+ln -s QCA206X %{buildroot}/usr/lib/firmware/ath11k/QCA2066
+
 %files
+%{_prefix}/lib/firmware/ath11k/QCA2066
 %{_prefix}/lib/firmware/ath11k/QCA206X/hw2.1/amss.bin.xz
 %{_prefix}/lib/firmware/ath11k/QCA206X/hw2.1/board-2.bin.xz
 %{_prefix}/lib/firmware/ath11k/QCA206X/hw2.1/board.bin.xz
@@ -92,6 +96,9 @@ rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildr
 %{_prefix}/share/wireplumber/scripts/open-alsa-acp-dsm-node.lua
 
 %changelog
+* Tue Jul 23 2024 Luke Short <ekultails@gmail.com> 20231113.1-3
+- Fix Steam Deck OLED Wi-Fi firmware support
+
 * Tue Jul 23 2024 Luke Short <ekultails@gmail.com> 20231113.1-2
 - Add Steam Deck OLED audio firmware and configuration files
 
