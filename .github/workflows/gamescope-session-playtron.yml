@@ -23,7 +23,7 @@ jobs:
       - name: Create the necessary RPM build directories
         run: mkdir -p ~/rpmbuild/SOURCES/
       - name: Copy internal source files
-        run: cp ${GITHUB_WORKSPACE}/${DIRECTORY}/* ~/rpmbuild/SOURCES/
+        run: cp ${GITHUB_WORKSPACE}/${PACKAGE_NAME}/* ~/rpmbuild/SOURCES/
       - name: Download external source files
         run: spectool -g -R ${GITHUB_WORKSPACE}/${PACKAGE_NAME}/${PACKAGE_NAME}.spec
       - name: Build the source RPM
