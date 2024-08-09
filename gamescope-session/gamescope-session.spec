@@ -1,8 +1,8 @@
 Name: gamescope-session
 # GitVersion versioning is to show how many commits have been made to the git repository.
-Version: 0.1.0+288
+Version: 0.1.0+290
 Release: 1%{?dist}
-%define ver f8390d38c1347a3ad60540db95bcca284b0f1982
+%define ver bec85df9971b29e2d901cdb4b2f4d28656687d4c
 Summary: Common gamescope session files
 License: MIT
 URL: https://github.com/ChimeraOS/gamescope-session
@@ -31,6 +31,9 @@ cp gamescope-session-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamescope-se
 /usr/share/licenses/gamescope-session-plus/LICENSE
 
 %changelog
+* Fri Aug 9 2024 Alesh Slovak <aleshslovak@gmail.com> 0.1.0+290-1
+- Update version
+
 * Thu Aug 1 2024 Alesh Slovak <aleshslovak@gmail.com> 0.1.0+288-1
 - Update version
 
