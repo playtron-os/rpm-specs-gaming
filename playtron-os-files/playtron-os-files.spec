@@ -2,7 +2,7 @@ Name: playtron-os-files
 Version: 0.16.7
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
-License: Apache-2.0
+License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
