@@ -30,11 +30,11 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/clatd-ipv6-check
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
-/usr/lib/modules-load.d/controllers.conf
-/usr/lib/NetworkManager/conf.d/50-playtron.conf
 /usr/bin/playtron-factory-reset
 /usr/bin/playtronos-update
 /usr/bin/resize-root-file-system.sh
+/usr/lib/modules-load.d/controllers.conf
+/usr/lib/NetworkManager/conf.d/50-playtron.conf
 /usr/lib/sysctl.d/50-swappiness.conf
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/clatd-ipv6-check.service
