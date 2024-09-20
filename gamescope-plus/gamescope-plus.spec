@@ -64,6 +64,9 @@ Requires:       xorg-x11-server-Xwayland
 Recommends:     mesa-dri-drivers
 Recommends:     mesa-vulkan-drivers
 
+# Disable the unused debug package.
+%global debug_package %{nil}
+
 %description
 %{name} is the micro-compositor optimized for running video games on Wayland.
 

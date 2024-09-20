@@ -1,13 +1,16 @@
 Name: gamescope-session
 # GitVersion versioning is to show how many commits have been made to the git repository.
 Version: 0.1.0+291
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define ver aa57bda3f17f660064c1e63f9497fa0a46df1e86
 Summary: Common gamescope session files
 License: MIT
 URL: https://github.com/ChimeraOS/gamescope-session
 Source0: https://github.com/ChimeraOS/gamescope-session/archive/%{ver}.zip
 Requires: gamescope
+
+# Disable the unused debug package.
+%global debug_package %{nil}
 
 %description
 %{summary}.
@@ -31,6 +34,9 @@ cp gamescope-session-%{ver}/LICENSE %{buildroot}/usr/share/licenses/gamescope-se
 /usr/share/licenses/gamescope-session-plus/LICENSE
 
 %changelog
+* Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 0.1.0+291-2
+- Disable debug package to fix builds on Fedora 41
+
 * Thu Aug 22 2024 Alesh Slovak <aleshslovak@gmail.com> 0.1.0+291-1
 - Update version
 

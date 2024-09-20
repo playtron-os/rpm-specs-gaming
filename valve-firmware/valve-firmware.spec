@@ -1,7 +1,7 @@
 Name: valve-firmware
 # There are two source packages that use a date version. Set the RPM version to mirror whichever source is newer.
 Version: 20231113.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Linux firmware files for the Steam Deck OLED
 License: GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/
@@ -10,6 +10,9 @@ Source1: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/
 Source2: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steamdeck-dsp-0.49-1-any.pkg.tar.zst
 BuildArch: x86_64
 BuildRequires: xz zstd
+
+# Disable the unused debug package.
+%global debug_package %{nil}
 
 %description
 %{summary}.
@@ -92,6 +95,9 @@ rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildr
 %{_prefix}/share/wireplumber/scripts/open-alsa-acp-dsm-node.lua
 
 %changelog
+* Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 20231113.1-5
+- Disable debug package to fix builds on Fedora 41
+
 * Fri Sep 13 2024 Luke Short <ekultails@gmail.com> 20231113.1-4
 - Revert Steam Deck OLED Wi-Fi firmware support now that it is upstream in linux-firmware-20240909
 
