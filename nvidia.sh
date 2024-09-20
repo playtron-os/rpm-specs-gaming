@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dnf install -y createrepo_c git kernel-devel openssl rpm-build rpm-sign
+dnf install -y binutils-gold createrepo_c git kernel-devel openssl rpm-build rpm-sign wget
 
 #FIXME: This hack installs the latest kernel and then downgrades to the
 # Playtron OS kernel. This is the easiest way to install the correct
@@ -9,7 +9,8 @@ dnf copr enable -y playtron/gaming
 dnf install -y kernel-devel kernel-headers
 dnf downgrade -y kernel-devel kernel-headers
 
-git clone https://github.com/NVIDIA/yum-packaging-precompiled-kmod.git
+#git clone https://github.com/NVIDIA/yum-packaging-precompiled-kmod.git
+git clone --branch custom-kernel-name https://github.com/LukeShortCloud/yum-packaging-precompiled-kmod.git
 cd yum-packaging-precompiled-kmod
 mkdir -p ~/precompiled-kmod/SPECS/
 
@@ -18,8 +19,8 @@ mkdir -p ~/precompiled-kmod/SPECS/
 cp ./dnf-kmod-nvidia.spec ~/precompiled-kmod/SPECS/kmod-nvidia.spec
 ## Download 'primary.xml.gz' repository data.
 baseURL="http://developer.download.nvidia.com/compute/cuda/repos"
-### "fedora38" is not available yet.
-distro="fedora37"
+### "fedora40" is not available yet.
+distro="fedora39"
 arch="x86_64"
 curl "http://developer.download.nvidia.com/compute/cuda/repos/${distro}/${arch}/$(curl -sL http://developer.download.nvidia.com/compute/cuda/repos/${distro}/${arch}/repodata/repomd.xml | grep primary.xml | cut -d\" -f2)" --output primary.xml.gz
 gunzip primary.xml.gz
@@ -31,13 +32,7 @@ grep -o -P "5[0-9]+\.[0-9]+\.[0-9]+" primary.xml | sort | uniq
 # Download this dependency to help with creating a modular repository.
 wget https://raw.githubusercontent.com/NVIDIA/cuda-repo-management/main/genmodules.py
 
-# Override the detected kernel version parts. The local ".playtron" tag throws off the logic of the "build.sh" script.
-sed -i s'/kernel=.*/kernel="6.3.13"/'g build.sh
-sed -i s'/release=.*/release="200.playtron"/'g build.sh
-sed -i s'/dist=.*/dist=".fc38"/'g build.sh
-
-# NVIDIA packages are not available for Fedora 38 yet.
-# Instead, repackage Fedora 37 packages since they are forward compatible.
-bash build.sh ~/Downloads/NVIDIA-Linux-x86_64-535.54.03.run fedora37
-
-# The NVIDIA repository is stored at: ~/precompiled-kmod/repo
+# NVIDIA packages are not available for Fedora 40 yet.
+# Instead, repackage Fedora 39 packages since they are forward compatible.
+# The NVIDIA repository will be created at: ~/precompiled-kmod/repo/
+bash build.sh ~/Downloads/NVIDIA-Linux-x86_64-560.35.03.run fedora39
