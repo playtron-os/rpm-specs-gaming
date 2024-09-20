@@ -1,7 +1,7 @@
 Name: python3-edl
 Version: 3.52.1+243
 %define commit 8f606dd1fe968371efe3ffdc2d1c7ebc7a888327
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Qualcomm Arm SoC Emergency Download (EDL) client and diagnostic tools
 License: GPL-3.0-only
 URL: https://github.com/bkerler/edl
@@ -14,6 +14,9 @@ Recommends: python3-qrcode
 Suggests: dtc
 # edl does not work at all with ModemManager installed.
 Conflicts: ModemManager
+
+# Disable the unused debug package.
+%global debug_package %{nil}
 
 %description
 %{summary}.
@@ -61,5 +64,8 @@ cp ./LICENSE %{buildroot}/usr/share/licenses/python3-edl/
 /usr/share/licenses/python3-edl/LICENSE
 
 %changelog
+* Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 3.52.1+243-2
+- Disable debug package to fix builds on Fedora 41
+
 * Tue Mar 05 2024 Luke Short <ekultails@gmail.com> 3.52.1+243-1
 - Initial RPM spec created

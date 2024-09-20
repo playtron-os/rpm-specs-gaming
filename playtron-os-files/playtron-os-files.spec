@@ -1,6 +1,6 @@
 Name: playtron-os-files
 Version: 0.16.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
@@ -10,6 +10,9 @@ Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts
+
+# Disable the unused debug package.
+%global debug_package %{nil}
 
 %description
 %{summary}.
@@ -63,6 +66,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 0.16.8-2
+- Disable debug package to fix builds on Fedora 41
+
 * Thu Aug 29 2024 Luke Short <ekultails@gmail.com> 0.16.8-1
 - Update version
 

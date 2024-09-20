@@ -1,6 +1,6 @@
 Name: gamescope-session-playtron
 Version: 0.2.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Playtron Session for PlaytronOS
 License: MIT
 URL: https://github.com/playtron-os/gamescope-session-playtron
@@ -9,6 +9,9 @@ Requires: gamescope
 Requires: gamescope-session
 Requires: grid
 Requires: brightnessctl
+
+# Disable the unused debug package.
+%global debug_package %{nil}
 
 %description
 %{summary}.
@@ -28,6 +31,9 @@ cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 /usr/bin/playtronos-session-select
 
 %changelog
+* Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 0.2.2-2
+- Disable debug package to fix builds on Fedora 41
+
 * Fri Aug 9 2024 Alesh Slovak <aleshslovak@gmail.com> 0.2.2-1
 - Update version
 

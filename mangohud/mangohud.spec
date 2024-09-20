@@ -2,7 +2,7 @@
 ## (rpmautospec version 0.6.1)
 ## RPMAUTOSPEC: autorelease, autochangelog
 %define autorelease(e:s:pb:n) %{?-p:0.}%{lua:
-    release_number = 4;
+    release_number = 5;
     base_release_number = tonumber(rpm.expand("%{?-b*}%{!?-b:1}"));
     print(release_number + base_release_number - 1);
 }%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{!?-n:%{?dist}}
@@ -88,6 +88,9 @@ Suggests:       goverlay
 
 Provides:       bundled(imgui) = %{imgui_ver}
 Provides:       bundled(vulkan-headers) = %{vulkan_headers_ver}
+
+# Disable the unused debug package.
+%global debug_package %{nil}
 
 %global _description %{expand:
 A Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load and
@@ -197,6 +200,9 @@ sed -i "s@#!/usr/bin/env python@#!/usr/bin/python3@" \
 
 
 %changelog
+* Fri Sep 20 2024 Luke Short <ekultails@gmail.com> - 0.7.1-5
+- Disable debug package to fix builds on Fedora 41
+
 * Wed Apr 10 2024 Alesh Slovak <aleshslovak@gmail.com> - 0.7.1-4
 - Add patch for expanded log summary
 
