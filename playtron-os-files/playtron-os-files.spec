@@ -1,6 +1,6 @@
 Name: playtron-os-files
-Version: 0.16.8
-Release: 2%{?dist}
+Version: 0.16.9
+Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
@@ -36,6 +36,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/playtron-factory-reset
 /usr/bin/playtronos-update
 /usr/bin/resize-root-file-system.sh
+/usr/lib/modprobe.d/50-playtron.conf
 /usr/lib/modules-load.d/controllers.conf
 /usr/lib/NetworkManager/conf.d/50-playtron.conf
 /usr/lib/sysctl.d/50-swappiness.conf
@@ -66,6 +67,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Oct 11 2024 Alesh Slovak <aleshslovak@gmail.com> 0.16.9-1
+- Update version
+
 * Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 0.16.8-2
 - Disable debug package to fix builds on Fedora 41
 

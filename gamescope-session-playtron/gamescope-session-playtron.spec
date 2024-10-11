@@ -1,6 +1,6 @@
 Name: gamescope-session-playtron
-Version: 0.2.2
-Release: 2%{?dist}
+Version: 0.2.3
+Release: 1%{?dist}
 Summary: Playtron Session for PlaytronOS
 License: MIT
 URL: https://github.com/playtron-os/gamescope-session-playtron
@@ -31,6 +31,9 @@ cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 /usr/bin/playtronos-session-select
 
 %changelog
+* Fri Oct 11 2024 Alesh Slovak <aleshslovak@gmail.com> 0.2.3-1
+- Update version
+
 * Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 0.2.2-2
 - Disable debug package to fix builds on Fedora 41
 
