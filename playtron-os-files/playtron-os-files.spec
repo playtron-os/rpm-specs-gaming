@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.16.11
+Version: 0.17.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -29,17 +29,19 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 
 %files
 /etc/gai.conf
+/etc/security/limits.d/50-playtron.conf
 /etc/xdg/weston/weston.ini
 /usr/bin/clatd-ipv6-check
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
+/usr/lib/sysctl.d/50-playtron.conf
 /usr/bin/playtron-factory-reset
 /usr/bin/playtronos-update
 /usr/bin/resize-root-file-system.sh
 /usr/lib/modprobe.d/50-playtron.conf
 /usr/lib/modules-load.d/controllers.conf
 /usr/lib/NetworkManager/conf.d/50-playtron.conf
-/usr/lib/sysctl.d/50-swappiness.conf
+/usr/lib/sysctl.d/50-playtron.conf
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/clatd-ipv6-check.service
 /usr/lib/systemd/system/create-swap.service
@@ -67,6 +69,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Nov 01 2024 Luke Short <ekultails@gmail.com> 0.17.0-1
+- Update version
+
 * Wed Oct 30 2024 Luke Short <ekultails@gmail.com> 0.16.11-1
 - Update version
 
