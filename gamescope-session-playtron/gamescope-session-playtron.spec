@@ -1,5 +1,5 @@
 Name: gamescope-session-playtron
-Version: 0.2.4
+Version: 0.2.5
 Release: 1%{?dist}
 Summary: Playtron Session for PlaytronOS
 License: MIT
@@ -31,6 +31,9 @@ cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 /usr/bin/playtronos-session-select
 
 %changelog
+* Mon Nov 18 2024 Alesh Slovak <aleshslovak@gmail.com> 0.2.5-1
+- Update version
+
 * Fri Nov 01 2024 Luke Short <ekultails@gmail.com> 0.2.4-1
 - Update version
 
