@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.17.0
+Version: 0.17.1
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -69,6 +69,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Wed Nov 20 2024 Alesh Slovak <aleshslovak@gmail.com> 0.17.1-1
+- Update version
+
 * Fri Nov 01 2024 Luke Short <ekultails@gmail.com> 0.17.0-1
 - Update version
 
