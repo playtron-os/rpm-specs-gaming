@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.17.1
+Version: 0.18.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -34,13 +34,13 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/clatd-ipv6-check
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
-/usr/lib/sysctl.d/50-playtron.conf
 /usr/bin/playtron-factory-reset
 /usr/bin/playtronos-update
 /usr/bin/resize-root-file-system.sh
 /usr/lib/modprobe.d/50-playtron.conf
 /usr/lib/modules-load.d/controllers.conf
 /usr/lib/NetworkManager/conf.d/50-playtron.conf
+/usr/lib/sddm/sddm.conf.d/55-playtron.conf
 /usr/lib/sysctl.d/50-playtron.conf
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/clatd-ipv6-check.service
@@ -50,25 +50,27 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/udev/rules.d/50-block-scheduler.rules
 /usr/share/licenses/playtron-os-files/LICENSE
-/usr/share/lightdm/lightdm.conf.d/55-playtron.conf
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.hwctl.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.playtronos-update.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
 
 %post
-%systemd_post clatd-ipv6-check.service create-swap.service lightdm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_post clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
 %systemd_user_post playserve.service gamescope-dbus.service
 
 %preun
-%systemd_preun clatd-ipv6-check.service create-swap.service lightdm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_preun clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
 %systemd_user_preun playserve.service gamescope-dbus.service
 
 %postun
-%systemd_postun clatd-ipv6-check.service create-swap.service lightdm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_postun clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Mon Dec 02 2024 Alesh Slovak <aleshslovak@gmail.com> 0.18.0-1
+- Update version
+
 * Wed Nov 20 2024 Alesh Slovak <aleshslovak@gmail.com> 0.17.1-1
 - Update version
 
