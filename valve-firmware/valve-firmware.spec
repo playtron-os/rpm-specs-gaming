@@ -1,15 +1,17 @@
 Name: valve-firmware
 # There are two source packages that use a date version. Set the RPM version to mirror whichever source is newer.
-Version: 20231113.1
-Release: 5%{?dist}
+Version: 20240917.1
+Release: 1%{?dist}
 Summary: Linux firmware files for the Steam Deck OLED
 License: GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/
-Source0: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/linux-firmware-neptune-jupiter.%{version}-1-any.pkg.tar.zst
+Source0: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/linux-firmware-neptune-jupiter.%{version}-2-any.pkg.tar.zst
 Source1: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/linux-firmware-neptune-20230121.1f01c88-1-any.pkg.tar.zst
-Source2: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steamdeck-dsp-0.49-1-any.pkg.tar.zst
+Source2: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steamdeck-dsp-0.49.5-1-any.pkg.tar.zst
 BuildArch: x86_64
 BuildRequires: xz zstd
+Requires: atheros-firmware cirrus-audio-firmware linux-firmware
+Recommends: pipewire-alsa systemd wireplumber
 
 # Disable the unused debug package.
 %global debug_package %{nil}
@@ -30,13 +32,19 @@ mkdir -p \
 # Fedora uses XZ compression by default for kernel modules to save space.
 # Some files are already compressed with Zstandard. Change them to XZ.
 zstd --decompress --rm usr/lib/firmware/ath11k/QCA206X/hw2.1/*
-xz --check=crc32 usr/lib/firmware/ath11k/QCA206X/hw2.1/*
+xz --check=crc32 usr/lib/firmware/ath11k/QCA206X/hw2.1/{amss.bin,board-2.bin,board.bin,regdb.bin}
+## Recreate symlinks.
+rm -f \
+  usr/lib/firmware/ath11k/QCA206X/hw2.1/boardg.bin.zst \
+  usr/lib/firmware/ath11k/QCA206X/hw2.1/m3.bin.zst
+ln -s board.bin.xz usr/lib/firmware/ath11k/QCA206X/hw2.1/boardg.bin.xz
+ln -s ../../QCA2066/hw2.1/m3.bin.xz usr/lib/firmware/ath11k/QCA206X/hw2.1/m3.bin.xz
 mv usr/lib/firmware/ath11k/QCA206X %{buildroot}/%{_prefix}/lib/firmware/ath11k/
 
 xz --check=crc32 usr/lib/firmware/cs35l41-dsp1-spk-{cali.bin,cali.wmfw}
 mv usr/lib/firmware/cs35l41-dsp1-spk-{cali.bin,cali.wmfw}.xz %{buildroot}/%{_prefix}/lib/firmware/cirrus/
 
-tar -xvf %{_sourcedir}/steamdeck-dsp-*-any.pkg.tar.zst -C %{buildroot}/
+tar -xvf %{_sourcedir}/steamdeck-dsp-0.49.5-1-any.pkg.tar.zst -C %{buildroot}/
 rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildroot}/etc/wireplumber
 
 %files
@@ -84,17 +92,18 @@ rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildr
 %{_prefix}/share/wireplumber/hardware-profiles/valve-galileo/wireplumber.conf.d/alsa-card1.conf
 %{_prefix}/share/wireplumber/hardware-profiles/valve-galileo/wireplumber.conf.d/alsa-ps-controller.conf
 %{_prefix}/share/wireplumber/hardware-profiles/valve-galileo/wireplumber.conf.d/bluez.conf
+%{_prefix}/share/wireplumber/hardware-profiles/valve-galileo/wireplumber.conf.d/component-rules.conf
 %{_prefix}/share/wireplumber/hardware-profiles/valve-jupiter/wireplumber.conf.d/alsa-card0.conf
 %{_prefix}/share/wireplumber/hardware-profiles/valve-jupiter/wireplumber.conf.d/alsa-card1.conf
 %{_prefix}/share/wireplumber/hardware-profiles/valve-jupiter/wireplumber.conf.d/alsa-ps-controller.conf
 %{_prefix}/share/wireplumber/hardware-profiles/valve-jupiter/wireplumber.conf.d/bluez.conf
+%{_prefix}/share/wireplumber/hardware-profiles/valve-jupiter/wireplumber.conf.d/component-rules.conf
 %{_prefix}/share/wireplumber/hardware-profiles/wireplumber-hwconfig
-%{_prefix}/share/wireplumber/main.lua.d/60-alsa-acp5x-config.lua
-%{_prefix}/share/wireplumber/main.lua.d/60-alsa-card0-config.lua
-%{_prefix}/share/wireplumber/main.lua.d/60-alsa-ps-controller-config.lua
-%{_prefix}/share/wireplumber/scripts/open-alsa-acp-dsm-node.lua
 
 %changelog
+* Thu Nov 21 2024 Luke Short <ekultails@gmail.com> 20240917.1-1
+- Update to SteamOS 3.6.20 packages
+
 * Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 20231113.1-5
 - Disable debug package to fix builds on Fedora 41
 
