@@ -30,7 +30,7 @@
 %endif
 
 Name:           mangohud
-Version:        0.7.1
+Version:        0.7.2
 %forgemeta
 Release:        %autorelease
 Summary:        Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load
