@@ -1,7 +1,7 @@
 Name: valve-firmware
 # There are two source packages that use a date version. Set the RPM version to mirror whichever source is newer.
 Version: 20240917.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Linux firmware files for the Steam Deck OLED
 License: GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/
@@ -12,6 +12,7 @@ BuildArch: x86_64
 BuildRequires: xz zstd
 Requires: atheros-firmware cirrus-audio-firmware linux-firmware
 Recommends: pipewire-alsa systemd wireplumber
+Conflicts: steamdeck-dsp steamdeck-firmware
 
 # Disable the unused debug package.
 %global debug_package %{nil}
@@ -101,6 +102,9 @@ rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildr
 %{_prefix}/share/wireplumber/hardware-profiles/wireplumber-hwconfig
 
 %changelog
+* Wed Feb 05 2025 Luke Short <ekultails@gmail.com> 20240917.1-2
+- Conflict with Nobara packages
+
 * Thu Nov 21 2024 Luke Short <ekultails@gmail.com> 20240917.1-1
 - Update to SteamOS 3.6.20 packages
 
