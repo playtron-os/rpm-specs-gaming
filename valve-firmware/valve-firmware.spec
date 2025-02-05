@@ -1,7 +1,7 @@
 Name: valve-firmware
 # There are two source packages that use a date version. Set the RPM version to mirror whichever source is newer.
 Version: 20240917.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Linux firmware files for the Steam Deck OLED
 License: GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL: https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/
@@ -48,6 +48,8 @@ mv usr/lib/firmware/cs35l41-dsp1-spk-{cali.bin,cali.wmfw}.xz %{buildroot}/%{_pre
 tar -xvf %{_sourcedir}/steamdeck-dsp-0.49.5-1-any.pkg.tar.zst -C %{buildroot}/
 rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildroot}/etc/wireplumber
 
+cp %{_sourcedir}/pipewire-pulse.conf %{buildroot}%{_prefix}/share/pipewire/hardware-profiles/valve-jupiter/pipewire.conf.d/
+
 %files
 %{_prefix}/lib/firmware/ath11k/QCA206X/hw2.1/amss.bin.xz
 %{_prefix}/lib/firmware/ath11k/QCA206X/hw2.1/board-2.bin.xz
@@ -87,6 +89,7 @@ rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildr
 %{_prefix}/share/pipewire/hardware-profiles/valve-galileo/pipewire.conf.d/virtual-sink.conf
 %{_prefix}/share/pipewire/hardware-profiles/valve-galileo/pipewire.conf.d/virtual-source.conf
 %{_prefix}/share/pipewire/hardware-profiles/valve-jupiter/pipewire.conf.d/filter-chain.conf
+%{_prefix}/share/pipewire/hardware-profiles/valve-jupiter/pipewire.conf.d/pipewire-pulse.conf
 %{_prefix}/share/pipewire/hardware-profiles/valve-jupiter/pipewire.conf.d/virtual-source.conf
 %{_prefix}/share/wireplumber/hardware-profiles/default
 %{_prefix}/share/wireplumber/hardware-profiles/valve-galileo/wireplumber.conf.d/alsa-card0.conf
@@ -102,6 +105,9 @@ rm -f %{buildroot}/.BUILDINFO %{buildroot}/.MTREE %{buildroot}/.PKGINFO %{buildr
 %{_prefix}/share/wireplumber/hardware-profiles/wireplumber-hwconfig
 
 %changelog
+* Wed Feb 05 2025 Luke Short <ekultails@gmail.com> 20240917.1-3
+- Add Steam Deck OLED specific configuration with a faster polling rate to fix crackling audio issues
+
 * Wed Feb 05 2025 Luke Short <ekultails@gmail.com> 20240917.1-2
 - Conflict with Nobara packages
 
