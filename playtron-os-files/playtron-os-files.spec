@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.18.2
+Version: 0.18.3
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -49,6 +49,13 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/udev/rules.d/50-block-scheduler.rules
+/usr/share/inputplumber/devices/25-playtron-ayaneo_2.yaml
+/usr/share/inputplumber/devices/25-playtron-ayaneo_2s.yaml
+/usr/share/inputplumber/devices/25-playtron-legion_go.yaml
+/usr/share/inputplumber/devices/25-playtron-msi_claw.yaml
+/usr/share/inputplumber/devices/25-playtron-rog_ally.yaml
+/usr/share/inputplumber/devices/25-playtron-rog_ally_x.yaml
+/usr/share/inputplumber/devices/25-playtron-steam_deck.yaml
 /usr/share/licenses/playtron-os-files/LICENSE
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.hwctl.rules
@@ -68,6 +75,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Feb 07 2025 Alesh Slovak <aleshslovak@gmail.com> 0.18.3-1
+- Update version
+
 * Thu Dec 19 2024 Alesh Slovak <aleshslovak@gmail.com> 0.18.2-1
 - Update version
 
