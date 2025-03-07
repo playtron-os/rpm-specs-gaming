@@ -1,12 +1,12 @@
 Name: playtron-os-files
-Version: 0.18.4
+Version: 0.19.1
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts
@@ -35,7 +35,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
 /usr/bin/playtron-factory-reset
+/usr/bin/playtronos-session-select
 /usr/bin/playtronos-update
+/usr/bin/playtron-weston
 /usr/bin/resize-root-file-system.sh
 /usr/lib/modprobe.d/50-playtron.conf
 /usr/lib/modules-load.d/controllers.conf
@@ -49,6 +51,8 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/udev/rules.d/50-block-scheduler.rules
+/usr/libexec/playtron/dev-session-trigger
+/usr/libexec/playtron/hardware-test-tool
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2.yaml
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2s.yaml
 /usr/share/inputplumber/devices/25-playtron-legion_go.yaml
@@ -59,8 +63,10 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/licenses/playtron-os-files/LICENSE
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.hwctl.rules
+/usr/share/polkit-1/rules.d/50-one.playtron.playtronos-session-select.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.playtronos-update.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.rpmostree1.rules
+/usr/share/wayland-sessions/playtron-weston.desktop
 
 %post
 %systemd_post clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
@@ -75,6 +81,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Mar 07 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.1-1
+- Update version
+
 * Tue Feb 11 2025 Alesh Slovak <aleshslovak@gmail.com> 0.18.4-1
 - Update version
 

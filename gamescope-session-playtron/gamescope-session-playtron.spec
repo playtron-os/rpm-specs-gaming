@@ -1,5 +1,5 @@
 Name: gamescope-session-playtron
-Version: 0.3.0
+Version: 0.3.1
 Release: 1%{?dist}
 Summary: Playtron Session for PlaytronOS
 License: MIT
@@ -28,9 +28,11 @@ cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 /usr/bin/jupiter-dock-updater
 /usr/bin/jupiter-biosupdate
 /usr/bin/steamos-update
-/usr/bin/playtronos-session-select
 
 %changelog
+* Fri Mar 07 2025 Alesh Slovak <aleshslovak@gmail.com> 0.3.1-1
+- Update version
+
 * Mon Dec 02 2024 Alesh Slovak <aleshslovak@gmail.com> 0.3.0-1
 - Update version
 
