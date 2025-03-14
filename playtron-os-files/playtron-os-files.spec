@@ -1,12 +1,12 @@
 Name: playtron-os-files
-Version: 0.19.1
+Version: 0.19.2
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts
@@ -31,6 +31,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /etc/gai.conf
 /etc/security/limits.d/50-playtron.conf
 /etc/xdg/weston/weston.ini
+/etc/xdg/weston/weston-rotated.ini
 /usr/bin/clatd-ipv6-check
 /usr/bin/create-swap.sh
 /usr/bin/hwctl
@@ -60,7 +61,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/inputplumber/devices/25-playtron-rog_ally.yaml
 /usr/share/inputplumber/devices/25-playtron-rog_ally_x.yaml
 /usr/share/inputplumber/devices/25-playtron-steam_deck.yaml
+/usr/share/inputplumber/devices/25-playtron-suiplay0x1.yaml
 /usr/share/licenses/playtron-os-files/LICENSE
+/usr/share/playtron/test_video.webm
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.hwctl.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.playtronos-session-select.rules
@@ -81,6 +84,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Mar 14 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.2-1
+- Update version
+
 * Fri Mar 07 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.1-1
 - Update version
 
