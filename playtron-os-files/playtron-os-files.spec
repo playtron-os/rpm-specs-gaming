@@ -74,6 +74,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 %post
 %systemd_post clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
 %systemd_user_post playserve.service gamescope-dbus.service
+systemd-hwdb update
 
 %preun
 %systemd_preun clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
