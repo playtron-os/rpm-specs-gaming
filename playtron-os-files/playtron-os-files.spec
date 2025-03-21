@@ -1,12 +1,12 @@
 Name: playtron-os-files
 Version: 0.19.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils ffmpeg powerstation upower
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts
@@ -93,6 +93,9 @@ systemd-hwdb update
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Mar 21 2025 Luke Short <ekultails@gmail.com> 0.19.3-2
+- Fix FFmpeg dependency to be more generic
+
 * Fri Mar 21 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.3-1
 - Update version
 
