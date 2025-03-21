@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.19.2
+Version: 0.19.3
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -51,9 +51,16 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
+/usr/lib/udev/hwdb.d/59-sui.hwdb
+/usr/lib/udev/rules.d/50-ayaneo2s.rules
 /usr/lib/udev/rules.d/50-block-scheduler.rules
+/usr/lib/udev/rules.d/50-suiplay0x1.rules
 /usr/libexec/playtron/dev-session-trigger
 /usr/libexec/playtron/hardware-test-tool
+/usr/libexec/playtron/stress-test-cpu+ram
+/usr/libexec/playtron/stress-test-disk
+/usr/libexec/playtron/stress-test-gpu
+/usr/libexec/playtron/stress-test-speaker
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2.yaml
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2s.yaml
 /usr/share/inputplumber/devices/25-playtron-legion_go.yaml
@@ -63,6 +70,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/inputplumber/devices/25-playtron-steam_deck.yaml
 /usr/share/inputplumber/devices/25-playtron-suiplay0x1.yaml
 /usr/share/licenses/playtron-os-files/LICENSE
+/usr/share/playtron/test_audio.mp3
 /usr/share/playtron/test_video.webm
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
 /usr/share/polkit-1/rules.d/50-one.playtron.hwctl.rules
@@ -85,6 +93,9 @@ systemd-hwdb update
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Mar 21 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.3-1
+- Update version
+
 * Fri Mar 14 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.2-1
 - Update version
 
