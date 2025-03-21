@@ -6,7 +6,7 @@ License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils ffmpeg powerstation upower
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils upower
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts
