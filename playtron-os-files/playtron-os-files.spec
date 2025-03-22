@@ -1,6 +1,6 @@
 Name: playtron-os-files
-Version: 0.19.3
-Release: 2%{?dist}
+Version: 0.19.4
+Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
@@ -93,6 +93,9 @@ systemd-hwdb update
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Fri Mar 21 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.4-1
+- Update version
+
 * Fri Mar 21 2025 Luke Short <ekultails@gmail.com> 0.19.3-2
 - Fix FFmpeg dependency to be more generic
 
