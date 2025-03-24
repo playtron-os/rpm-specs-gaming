@@ -1,0 +1,32 @@
+commit c9ff491c64fc336496973b3fea0e2373bbb0f9f0
+Author: Etaash Mathamsetty <etaash.mathamsetty@gmail.com>
+Date:   Sun Feb 16 11:54:10 2025 -0500
+
+    add wrapper exe support
+
+diff --git a/legendary/cli.py b/legendary/cli.py
+index b68b448..1c713d7 100644
+--- a/legendary/cli.py
++++ b/legendary/cli.py
+@@ -692,15 +692,18 @@ class LegendaryCLI:
+         if args.json:
+             return self._print_json(vars(params), args.pretty_json)
+ 
++        # Copying existing env vars is required on Windows, probably a good idea on Linux
++        full_env = os.environ.copy()
++        full_env.update(params.environment)
++
+         full_params = list()
+         full_params.extend(params.launch_command)
++        if 'LEGENDARY_WRAPPER_EXE' in full_env:
++            full_params.append(full_env['LEGENDARY_WRAPPER_EXE'].strip())
+         full_params.append(os.path.join(params.game_directory, params.game_executable))
+         full_params.extend(params.game_parameters)
+         full_params.extend(params.user_parameters)
+         full_params.extend(params.egl_parameters)
+-        # Copying existing env vars is required on Windows, probably a good idea on Linux
+-        full_env = os.environ.copy()
+-        full_env.update(params.environment)
+ 
+         if 'CX_BOTTLE' in full_env and any('SharedSupport/CrossOver' in p for p in params.launch_command):
+             # if using crossover, unset WINEPREFIX
