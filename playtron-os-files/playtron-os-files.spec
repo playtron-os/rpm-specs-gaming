@@ -1,15 +1,15 @@
 Name: playtron-os-files
-Version: 0.19.4
+Version: 0.20.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
-Conflicts: playtron-os-scripts
+Conflicts: playtron-os-scripts zram-generator-defaults
 
 # Disable the unused debug package.
 %global debug_package %{nil}
@@ -33,7 +33,6 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /etc/xdg/weston/weston.ini
 /etc/xdg/weston/weston-rotated.ini
 /usr/bin/clatd-ipv6-check
-/usr/bin/create-swap.sh
 /usr/bin/hwctl
 /usr/bin/playtron-factory-reset
 /usr/bin/playtronos-session-select
@@ -47,10 +46,10 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/sysctl.d/50-playtron.conf
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/clatd-ipv6-check.service
-/usr/lib/systemd/system/create-swap.service
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
+/usr/lib/systemd/zram-generator.conf
 /usr/lib/udev/hwdb.d/59-sui.hwdb
 /usr/lib/udev/rules.d/50-ayaneo2s.rules
 /usr/lib/udev/rules.d/50-block-scheduler.rules
@@ -80,19 +79,23 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/wayland-sessions/playtron-weston.desktop
 
 %post
-%systemd_post clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_post clatd-ipv6-check.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service systemd-zram-setup@zram0.service
 %systemd_user_post playserve.service gamescope-dbus.service
 systemd-hwdb update
 
 %preun
-%systemd_preun clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_preun clatd-ipv6-check.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service systemd-zram-setup@zram0.service
 %systemd_user_preun playserve.service gamescope-dbus.service
 
 %postun
-%systemd_postun clatd-ipv6-check.service create-swap.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service
+%systemd_postun clatd-ipv6-check.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service systemd-zram-setup@zram0.service
 %systemd_user_postun playserve.service gamescope-dbus.service
 
 %changelog
+* Mon Mar 24 2025 Luke Short <ekultails@gmail.com> 0.20.0-1
+- Update version
+- Add zram configuration
+
 * Fri Mar 21 2025 Alesh Slovak <aleshslovak@gmail.com> 0.19.4-1
 - Update version
 
