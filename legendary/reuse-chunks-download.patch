@@ -1,0 +1,184 @@
+commit 810e695d5ec17e98c6d63fc7b2ca1be78e9ae34e
+Author: Roman Belousov <rmbelousov@gmail.com>
+Date:   Wed Feb 19 16:14:46 2025 +0400
+
+    Reuse chunks from the same download if duplicated (#11)
+    
+    * Reuse chunks from the same download if duplicated
+    Drastically decrease memory footprint
+    
+    * Make reading from existing files optional with fallback, provide cmd parameter and config option
+
+diff --git a/README.md b/README.md
+index 32fa4af..a5cedbd 100644
+--- a/README.md
++++ b/README.md
+@@ -459,6 +459,8 @@ optional arguments:
+   --exclude <prefix>    Exclude files starting with <prefix> (case
+                         insensitive)
+   --install-tag <tag>   Only download files with the specified install tag
++  --read-files          Read duplicated parts from already saved files, do not
++                        keep them in RAM
+   --enable-reordering   Enable reordering optimization to reduce RAM
+                         requirements during download (may have adverse results
+                         for some titles)
+@@ -670,6 +672,8 @@ log_level = debug
+ max_memory = 2048
+ ; maximum number of worker processes when downloading (fewer workers will be slower, but also use less system resources)
+ max_workers = 8
++; Enables reading duplicated data from files during download (decreases RAM usage but increases disk I/O)
++read_files = false
+ ; default install directory
+ install_dir = /mnt/tank/games
+ ; locale override, must be in RFC 1766 format (e.g. "en-US")
+diff --git a/legendary/cli.py b/legendary/cli.py
+index b68b448..cb2099f 100644
+--- a/legendary/cli.py
++++ b/legendary/cli.py
+@@ -1000,6 +1000,7 @@ class LegendaryCLI:
+                                                           file_prefix_filter=args.file_prefix,
+                                                           file_exclude_filter=args.file_exclude_prefix,
+                                                           file_install_tag=args.install_tag,
++                                                          read_files=args.read_files,
+                                                           dl_optimizations=args.order_opt,
+                                                           dl_timeout=args.dl_timeout,
+                                                           repair=args.repair_mode,
+@@ -2850,6 +2851,8 @@ def main():
+                                 type=str, help='Exclude files starting with <prefix> (case insensitive)')
+     install_parser.add_argument('--install-tag', dest='install_tag', action='append', metavar='<tag>',
+                                 type=str, help='Only download files with the specified install tag')
++    install_parser.add_argument('--read-files', dest='read_files', action='store_true',
++                                help='Read duplicated parts from already saved files, do not keep them in memory')
+     install_parser.add_argument('--enable-reordering', dest='order_opt', action='store_true',
+                                 help='Enable reordering optimization to reduce RAM requirements '
+                                      'during download (may have adverse results for some titles)')
+diff --git a/legendary/core.py b/legendary/core.py
+index 58ee735..0950105 100644
+--- a/legendary/core.py
++++ b/legendary/core.py
+@@ -1336,6 +1336,7 @@ class LegendaryCore:
+                          override_old_manifest: str = '', override_base_url: str = '',
+                          platform: str = 'Windows', file_prefix_filter: list = None,
+                          file_exclude_filter: list = None, file_install_tag: list = None,
++                         read_files: bool = False,
+                          dl_optimizations: bool = False, dl_timeout: int = 10,
+                          repair: bool = False, repair_use_latest: bool = False,
+                          disable_delta: bool = False, override_delta_manifest: str = '',
+@@ -1496,6 +1497,9 @@ class LegendaryCore:
+         if not max_shm:
+             max_shm = self.lgd.config.getint('Legendary', 'max_memory', fallback=2048)
+ 
++        if not read_files:
++            read_files = self.lgd.config.getboolean('Legendary', 'read_files', fallback=False)
++
+         if dl_optimizations or is_opt_enabled(game.app_name, new_manifest.meta.build_version):
+             self.log.info('Download order optimizations are enabled.')
+             process_opt = True
+@@ -1508,12 +1512,26 @@ class LegendaryCore:
+         dlm = DLManager(install_path, base_url, resume_file=resume_file, status_q=status_q,
+                         max_shared_memory=max_shm * 1024 * 1024, max_workers=max_workers,
+                         dl_timeout=dl_timeout, bind_ip=bind_ip)
+-        anlres = dlm.run_analysis(manifest=new_manifest, old_manifest=old_manifest,
+-                                  patch=not disable_patching, resume=not force,
+-                                  file_prefix_filter=file_prefix_filter,
+-                                  file_exclude_filter=file_exclude_filter,
+-                                  file_install_tag=file_install_tag,
+-                                  processing_optimization=process_opt)
++
++        analysis_kwargs = dict(
++            old_manifest=old_manifest,
++            patch=not disable_patching, resume=not force,
++            file_prefix_filter=file_prefix_filter,
++            file_exclude_filter=file_exclude_filter,
++            file_install_tag=file_install_tag,
++            processing_optimization=process_opt
++        )
++
++        try:
++            anlres = dlm.run_analysis(manifest=new_manifest, **analysis_kwargs, read_files=read_files)
++        except MemoryError:
++            if read_files:
++                raise
++            self.log.warning('Memory error encountered, retrying with file read enabled...')
++            dlm = DLManager(install_path, base_url, resume_file=resume_file, status_q=status_q,
++                        max_shared_memory=max_shm * 1024 * 1024, max_workers=max_workers,
++                        dl_timeout=dl_timeout, bind_ip=bind_ip)
++            anlres = dlm.run_analysis(manifest=new_manifest, **analysis_kwargs, read_files=True)
+ 
+         prereq = None
+         if new_manifest.meta.prereq_ids:
+diff --git a/legendary/downloader/mp/manager.py b/legendary/downloader/mp/manager.py
+index 90ab37a..b360d45 100644
+--- a/legendary/downloader/mp/manager.py
++++ b/legendary/downloader/mp/manager.py
+@@ -82,6 +82,7 @@ class DLManager(Process):
+     def run_analysis(self, manifest: Manifest, old_manifest: Manifest = None,
+                      patch=True, resume=True, file_prefix_filter=None,
+                      file_exclude_filter=None, file_install_tag=None,
++                     read_files=False,
+                      processing_optimization=False) -> AnalysisResult:
+         """
+         Run analysis on manifest and old manifest (if not None) and return a result
+@@ -94,6 +95,7 @@ class DLManager(Process):
+         :param file_prefix_filter: Only download files that start with this prefix
+         :param file_exclude_filter: Exclude files with this prefix from download
+         :param file_install_tag: Only install files with the specified tag
++        :param read_files: Allow reading from already finished files
+         :param processing_optimization: Attempt to optimize processing order and RAM usage
+         :return: AnalysisResult
+         """
+@@ -318,6 +320,30 @@ class DLManager(Process):
+                             analysis_res.reuse_size += cp.size
+                             break
+ 
++        # determine whether a chunk part is currently in written files
++        reusable_written = defaultdict(dict)
++        if read_files:
++            self.log.debug('Analyzing manifest for re-usable chunks in saved files...')
++            cur_written_cps = defaultdict(list)
++            for cur_file in fmlist:
++                cur_file_cps = dict()
++                cur_file_offset = 0
++                for cp in cur_file.chunk_parts:
++                    key = (cp.guid_num, cp.offset, cp.size)
++                    for wr_file_name, wr_file_offset, wr_cp_offset, wr_cp_end_offset in cur_written_cps[cp.guid_num]:
++                        # check if new chunk part is wholly contained in a written chunk part
++                        cur_cp_end_offset = cp.offset + cp.size
++                        if wr_cp_offset <= cp.offset and wr_cp_end_offset >= cur_cp_end_offset:
++                            references[cp.guid_num] -= 1
++                            reuse_offset = wr_file_offset + (cp.offset - wr_cp_offset)
++                            reusable_written[cur_file.filename][key] = (wr_file_name, reuse_offset)
++                            break
++                    cur_file_cps[cp.guid_num] = (cur_file.filename, cur_file_offset, cp.offset, cp.offset + cp.size)
++                    cur_file_offset += cp.size
++
++                for guid, value in cur_file_cps.items():
++                    cur_written_cps[guid].append(value)
++
+         last_cache_size = current_cache_size = 0
+         # set to determine whether a file is currently cached or not
+         cached = set()
+@@ -338,6 +364,7 @@ class DLManager(Process):
+                 continue
+ 
+             existing_chunks = re_usable.get(current_file.filename, None)
++            written_chunks = reusable_written.get(current_file.filename, None)
+             chunk_tasks = []
+             reused = 0
+ 
+@@ -345,10 +372,13 @@ class DLManager(Process):
+                 ct = ChunkTask(cp.guid_num, cp.offset, cp.size)
+ 
+                 # re-use the chunk from the existing file if we can
+-                if existing_chunks and (cp.guid_num, cp.offset, cp.size) in existing_chunks:
++                key = (cp.guid_num, cp.offset, cp.size)
++                if existing_chunks and key in existing_chunks:
+                     reused += 1
+                     ct.chunk_file = current_file.filename
+-                    ct.chunk_offset = existing_chunks[(cp.guid_num, cp.offset, cp.size)]
++                    ct.chunk_offset = existing_chunks[key]
++                elif written_chunks and key in written_chunks:
++                    ct.chunk_file, ct.chunk_offset = written_chunks[key]
+                 else:
+                     # add to DL list if not already in it
+                     if cp.guid_num not in chunks_in_dl_list:

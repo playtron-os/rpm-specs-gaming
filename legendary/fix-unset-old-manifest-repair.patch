@@ -1,0 +1,19 @@
+commit 10b62afb65ae67ec005c5a23d2f80536f93d4a48
+Author: Paweł Lidwin <lidwinpawel@gmail.com>
+Date:   Thu Mar 13 23:02:57 2025 +0100
+
+    fix: unset old_manifest for all types of repair (#15)
+
+diff --git a/legendary/core.py b/legendary/core.py
+index 0950105..972d0ee 100644
+--- a/legendary/core.py
++++ b/legendary/core.py
+@@ -1457,7 +1457,7 @@ class LegendaryCore:
+             if not repair_use_latest and old_manifest:
+                 # use installed manifest for repairs instead of updating
+                 new_manifest = old_manifest
+-                old_manifest = None
++            old_manifest = None
+ 
+             filename = clean_filename(f'{game.app_name}.repair')
+             resume_file = os.path.join(self.lgd.get_tmp_path(), filename)
