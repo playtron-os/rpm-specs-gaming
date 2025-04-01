@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.21.0
+Version: 0.21.1
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -94,7 +94,7 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
-* Tue Apr 01 2025 Luke Short <ekultails@gmail.com> 0.21.0-1
+* Tue Apr 01 2025 Luke Short <ekultails@gmail.com> 0.21.1-1
 - Update version
 - Add microphone noise reduction configuration
 
