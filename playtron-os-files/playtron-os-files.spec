@@ -1,12 +1,12 @@
 Name: playtron-os-files
-Version: 0.20.0
+Version: 0.21.1
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts zram-generator-defaults
@@ -49,6 +49,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/system/resize-root-file-system.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
+/usr/lib/systemd/user/pipewire-rnnoise-switch.service
 /usr/lib/systemd/zram-generator.conf
 /usr/lib/udev/hwdb.d/59-sui.hwdb
 /usr/lib/udev/rules.d/50-ayaneo2s.rules
@@ -69,6 +70,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/inputplumber/devices/25-playtron-steam_deck.yaml
 /usr/share/inputplumber/devices/25-playtron-suiplay0x1.yaml
 /usr/share/licenses/playtron-os-files/LICENSE
+/usr/share/pipewire/pipewire.conf.d/pipewire-rnnoise.conf
 /usr/share/playtron/test_audio.mp3
 /usr/share/playtron/test_video.webm
 /usr/share/polkit-1/rules.d/50-one.playtron.factory-reset.rules
@@ -80,18 +82,22 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 
 %post
 %systemd_post clatd-ipv6-check.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service systemd-zram-setup@zram0.service
-%systemd_user_post playserve.service gamescope-dbus.service
+%systemd_user_post pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 systemd-hwdb update
 
 %preun
 %systemd_preun clatd-ipv6-check.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service systemd-zram-setup@zram0.service
-%systemd_user_preun playserve.service gamescope-dbus.service
+%systemd_user_preun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %postun
 %systemd_postun clatd-ipv6-check.service sddm.service NetworkManager-wait-online.service resize-root-file-system.service inputplumber.service firewalld.service systemd-zram-setup@zram0.service
-%systemd_user_postun playserve.service gamescope-dbus.service
+%systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Tue Apr 01 2025 Luke Short <ekultails@gmail.com> 0.21.1-1
+- Update version
+- Add microphone noise reduction configuration
+
 * Mon Mar 24 2025 Luke Short <ekultails@gmail.com> 0.20.0-1
 - Update version
 - Add zram configuration

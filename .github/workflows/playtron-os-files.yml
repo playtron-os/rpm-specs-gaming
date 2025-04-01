@@ -44,5 +44,7 @@ jobs:
         run: dnf builddep -y ${GITHUB_WORKSPACE}/playtron-os-files/playtron-os-files.spec
       - name: Build the binary RPM
         run: rpmbuild -bb ${GITHUB_WORKSPACE}/playtron-os-files/playtron-os-files.spec
+      - name: Enable the audio repository for the "ladspa-noise-suppression-for-voice" dependency
+        run: dnf -y copr enable ycollet/audinux
       - name: Install RPMs
         run: dnf -y install ~/rpmbuild/RPMS/*/*.rpm
