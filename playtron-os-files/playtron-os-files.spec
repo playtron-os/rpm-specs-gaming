@@ -1,12 +1,12 @@
 Name: playtron-os-files
-Version: 0.21.2
+Version: 0.21.3
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame python3-dbus foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts zram-generator-defaults
@@ -61,6 +61,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/libexec/playtron/stress-test-disk
 /usr/libexec/playtron/stress-test-gpu
 /usr/libexec/playtron/stress-test-speaker
+/usr/share/inputplumber/capability_maps/playtron_ayaneo_type7.yaml
+/usr/share/inputplumber/devices/24-playtron-ayaneo_2s_v2.yaml
+/usr/share/inputplumber/devices/24-playtron-suiplay0x1_v2.yaml
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2.yaml
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2s.yaml
 /usr/share/inputplumber/devices/25-playtron-legion_go.yaml
@@ -94,6 +97,10 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Tue Apr 08 2025 Alesh Slovak <aleshslovak@gmail.com> 0.21.3-1
+- Update version
+- Add `python3-dbus` dependency for `hardware-test-tool`
+
 * Fri Apr 04 2025 Alesh Slovak <aleshslovak@gmail.com> 0.21.2-1
 - Update version
 
