@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.21.3
+Version: 0.22.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -51,6 +51,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/systemd/user/pipewire-rnnoise-switch.service
 /usr/lib/systemd/zram-generator.conf
+/usr/lib/udev/hwdb.d/59-msi.hwdb
 /usr/lib/udev/hwdb.d/59-sui.hwdb
 /usr/lib/udev/rules.d/50-ayaneo2s.rules
 /usr/lib/udev/rules.d/50-block-scheduler.rules
@@ -67,7 +68,9 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2.yaml
 /usr/share/inputplumber/devices/25-playtron-ayaneo_2s.yaml
 /usr/share/inputplumber/devices/25-playtron-legion_go.yaml
-/usr/share/inputplumber/devices/25-playtron-msi_claw.yaml
+/usr/share/inputplumber/devices/25-playtron-msi_claw7_a2vm.yaml
+/usr/share/inputplumber/devices/25-playtron-msi_claw8_a2vm.yaml
+/usr/share/inputplumber/devices/25-playtron-msi_claw_a1m.yaml
 /usr/share/inputplumber/devices/25-playtron-rog_ally.yaml
 /usr/share/inputplumber/devices/25-playtron-rog_ally_x.yaml
 /usr/share/inputplumber/devices/25-playtron-steam_deck.yaml
@@ -97,6 +100,10 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Wed Apr 09 2025 Luke Short <ekultails@gmail.com> 0.22.0-1
+- Update version
+- Add MSI Claw A2VM controller configurations
+
 * Tue Apr 08 2025 Alesh Slovak <aleshslovak@gmail.com> 0.21.3-1
 - Update version
 - Add `python3-dbus` dependency for `hardware-test-tool`
