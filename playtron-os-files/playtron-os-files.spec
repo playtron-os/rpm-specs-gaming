@@ -1,12 +1,12 @@
 Name: playtron-os-files
 Version: 0.22.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame python3-dbus foot google-noto-sans-mono-cjk-vf-fonts stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame python3-dbus foot google-noto-sans-mono-cjk-vf-fonts rsync stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts zram-generator-defaults
@@ -100,6 +100,9 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Thu Apr 17 2025 Luke Short <ekultails@gmail.com> 0.22.0-2
+- Add 'rsync' dependency for the factory reset script
+
 * Wed Apr 09 2025 Luke Short <ekultails@gmail.com> 0.22.0-1
 - Update version
 - Add MSI Claw A2VM controller configurations
