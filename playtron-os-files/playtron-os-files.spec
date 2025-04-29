@@ -1,6 +1,6 @@
 Name: playtron-os-files
-Version: 0.22.0
-Release: 2%{?dist}
+Version: 0.22.1
+Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
@@ -100,6 +100,9 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Tue Apr 29 2025 Alesh Slovak <aleshslovak@gmail.com> 0.22.1-1
+- Update version
+
 * Thu Apr 17 2025 Luke Short <ekultails@gmail.com> 0.22.0-2
 - Add 'rsync' dependency for the factory reset script
 
