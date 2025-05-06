@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.22.2
+Version: 0.22.3
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -100,6 +100,9 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Tue May 06 2025 Luke Short <ekultails@gmail.com> 0.22.3-1
+- Update version
+
 * Wed Apr 30 2025 Alesh Slovak <aleshslovak@gmail.com> 0.22.2-1
 - Update version
 
