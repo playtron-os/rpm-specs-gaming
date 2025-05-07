@@ -1,12 +1,12 @@
 Name: playtron-os-files
 Version: 0.22.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
 URL: https://github.com/playtron-os/playtron-os-files
 Source0: https://github.com/playtron-os/playtron-os-files/archive/refs/tags/%{version}.tar.gz
 BuildArch: noarch
-Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame python3-dbus foot google-noto-sans-mono-cjk-vf-fonts rsync stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
+Requires: clatd cloud-utils-growpart fio fio-engine-libaio ladspa-noise-suppression-for-voice parted python3-pygame python3-dbus python3-gobject foot google-noto-sans-mono-cjk-vf-fonts rsync stress-ng vkmark alsa-utils /usr/bin/ffmpeg powerstation upower zram-generator
 BuildRequires: systemd-rpm-macros
 Obsoletes: playtron-os-scripts <= 0.5.1-1
 Conflicts: playtron-os-scripts zram-generator-defaults
@@ -100,6 +100,9 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Wed May 07 2025 Alesh Slovak <aleshslovak@gmail.com> 0.22.3-2
+- Add missing dependency for the dev-session-trigger script
+
 * Tue May 06 2025 Luke Short <ekultails@gmail.com> 0.22.3-1
 - Update version
 
