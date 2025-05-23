@@ -1,31 +1,12 @@
-## START: Set by rpmautospec
-## (rpmautospec version 0.5.1)
-## RPMAUTOSPEC: autorelease, autochangelog
-%define autorelease(e:s:pb:n) %{?-p:0.}%{lua:
-    release_number = 2;
-    base_release_number = tonumber(rpm.expand("%{?-b*}%{!?-b:1}"));
-    print(release_number + base_release_number - 1);
-}%{?-e:.%{-e*}}%{?-s:.%{-s*}}%{!?-n:%{?dist}}
-## END: Set by rpmautospec
-
 Name:           legendary
-Version:        0.20.36
-Release:        %autorelease
+Version:        0.20.37
+Release:        1.playtron
 Summary:        Free and open-source replacement for the Epic Games Launcher
 BuildArch:      noarch
 
 License:        GPL-3.0-or-later
-URL:            https://github.com/Heroic-Games-Launcher/legendary
+URL:            https://github.com/playtron-os/legendary
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
-Patch0:         conflict-resolution.patch
-# https://github.com/Heroic-Games-Launcher/legendary/pull/11
-Patch1:         reuse-chunks-download.patch
-# https://github.com/Heroic-Games-Launcher/legendary/pull/13
-Patch2:         add-wrapper-exe-support.patch
-# https://github.com/Heroic-Games-Launcher/legendary/pull/14
-Patch3:         feat-expose-summary-active.patch
-# https://github.com/Heroic-Games-Launcher/legendary/pull/15
-Patch4:         fix-unset-old-manifest-repair.patch
 
 BuildRequires:  python3-devel >= 3.9
 BuildRequires:  python3-setuptools
@@ -73,6 +54,9 @@ done
 
 
 %changelog
+* Fri May 23 2025 Alesh Slovak <aleshslovak@gmail.com> 0.20.37-1.playtron
+- Switch to Playtron fork
+
 * Mon Mar 24 2025 Luke Short <ekultails@gmail.com> 0.20.36-2
 - Add reuse chunks backport
 - Add wrapper EXE backport
