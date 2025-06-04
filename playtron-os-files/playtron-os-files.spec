@@ -1,5 +1,5 @@
 Name: playtron-os-files
-Version: 0.23.2
+Version: 0.24.0
 Release: 1%{?dist}
 Summary: Scripts and services for a gaming OS
 License: GPL-3.0-only
@@ -47,6 +47,7 @@ cp playtron-os-files-%{version}/LICENSE %{buildroot}/usr/share/licenses/playtron
 /usr/lib/systemd/logind.conf.d/00-playtron-power.conf
 /usr/lib/systemd/system/clatd-ipv6-check.service
 /usr/lib/systemd/system/resize-root-file-system.service
+/usr/lib/systemd/system/sleep-rfkill.service
 /usr/lib/systemd/system-preset/50-playtron.preset
 /usr/lib/systemd/user-preset/50-playtron.preset
 /usr/lib/systemd/user/pipewire-rnnoise-switch.service
@@ -100,6 +101,9 @@ systemd-hwdb update
 %systemd_user_postun pipewire-rnnoise-switch.service playserve.service gamescope-dbus.service
 
 %changelog
+* Wed Jun 4 2025 Alesh Slovak <aleshslovak@gmail.com> 0.24.0-1
+- Update version
+
 * Mon Jun 2 2025 Alesh Slovak <aleshslovak@gmail.com> 0.23.2-1
 - Update version
 
