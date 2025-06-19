@@ -11,7 +11,7 @@ jobs:
     name: Test mesa RPM build
     runs-on: ubuntu-22.04
     container:
-      image: fedora:40
+      image: fedora:41
     steps:
       - uses: actions/checkout@v3
       - name: Install RPM build dependencies
