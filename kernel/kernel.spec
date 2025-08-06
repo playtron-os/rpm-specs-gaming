@@ -54,7 +54,7 @@ Version: %{_basekver}.%{_stablekver}
 %if 0%{?_is_rc}
 %define customver 0.%{_rcver}
 %else
-%define customver 200
+%define customver 201
 %endif
 
 Release:%{customver}.nobara%{?dist}
@@ -129,6 +129,10 @@ Patch15: drm-atomic-flip.1.patch
 Patch16: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
 Patch17: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
 Patch18: xe-nonx86.patch
+
+# Btrfs log corruption patch
+# https://www.phoronix.com/news/Btrfs-Log-Tree-Corruption-Fix
+Patch19: btrfs-fix-log-tree-replay.patch
 
 %define __spec_install_post /usr/lib/rpm/brp-compress || :
 %define debug_package %{nil}
@@ -1129,6 +1133,9 @@ fi
 %files
 
 %changelog
+* Wed Aug 06 2025 Luke Short <ekultails@gmail.com> - 6.15.8-201
+- Add fix for Btrfs log corruption
+
 * Thu Jul 24 2025 LionHeartP <LionHeartP@proton.me> - 6.15.8-200
 - Update to 6.15.8
 
