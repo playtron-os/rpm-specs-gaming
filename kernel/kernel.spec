@@ -38,7 +38,7 @@ Name: kernel
 Summary: The Linux Kernel with Cachyos and Nobara Patches
 
 %define _basekver 6.15
-%define _stablekver 4
+%define _stablekver 8
 %define _rcver rc7
 %if %{_stablekver} == 0
 %define _tarkver %{_basekver}
@@ -122,6 +122,13 @@ Patch12: amdgpu-HAINAN-variant-fixup.patch
 Patch13: 0001-Allow-to-set-custom-USB-pollrate-for-specific-device.patch
 # Add xpadneo as patch instead of using dkms module
 Patch14: 0001-Add-xpadneo-bluetooth-hid-driver-module.patch
+# https://gitlab.freedesktop.org/drm/amd/-/issues/4263
+Patch15: drm-atomic-flip.1.patch
+
+# aarch64 patches
+Patch16: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
+Patch17: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
+Patch18: xe-nonx86.patch
 
 %define __spec_install_post /usr/lib/rpm/brp-compress || :
 %define debug_package %{nil}
@@ -429,6 +436,12 @@ patch -p1 -i %{PATCH11}
 patch -p1 -i %{PATCH12}
 patch -p1 -i %{PATCH13}
 patch -p1 -i %{PATCH14}
+patch -p1 -i %{PATCH15}
+
+# Apply aarch64 patches
+patch -p1 -i %{PATCH16}
+patch -p1 -i %{PATCH17}
+patch -p1 -i %{PATCH18}
 
 # Fetch the config and move it to the proper directory
 cp %{SOURCE1} .config
@@ -1114,3 +1127,11 @@ fi
 %{_mandir}/man1/rv.1.gz
 
 %files
+
+%changelog
+* Thu Jul 24 2025 LionHeartP <LionHeartP@proton.me> - 6.15.8-200
+- Update to 6.15.8
+
+* Fri Jul 18 2025 LionHeartP <LionHeartP@proton.me> - 6.15.7-200
+- Update to 6.15.7
+- Start keeping changelog entries
