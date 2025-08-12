@@ -441,11 +441,12 @@ patch -p1 -i %{PATCH12}
 patch -p1 -i %{PATCH13}
 patch -p1 -i %{PATCH14}
 patch -p1 -i %{PATCH15}
+patch -p1 -i %{PATCH16}
 
 # Apply aarch64 patches
-patch -p1 -i %{PATCH16}
 patch -p1 -i %{PATCH17}
 patch -p1 -i %{PATCH18}
+patch -p1 -i %{PATCH19}
 
 # Fetch the config and move it to the proper directory
 cp %{SOURCE1} .config
