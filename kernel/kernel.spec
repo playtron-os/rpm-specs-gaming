@@ -54,7 +54,7 @@ Version: %{_basekver}.%{_stablekver}
 %if 0%{?_is_rc}
 %define customver 0.%{_rcver}
 %else
-%define customver 201
+%define customver 202
 %endif
 
 Release:%{customver}.nobara%{?dist}
@@ -1134,6 +1134,10 @@ fi
 %files
 
 %changelog
+* Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-202
+- Actually apply patch for Btrfs log corruption
+- Do not build hid-asus-ally (prefer asus-ally-hid instead)
+
 * Wed Aug 06 2025 Luke Short <ekultails@gmail.com> - 6.15.8-201
 - Add fix for Btrfs log corruption
 
