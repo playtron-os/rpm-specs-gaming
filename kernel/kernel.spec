@@ -54,7 +54,7 @@ Version: %{_basekver}.%{_stablekver}
 %if 0%{?_is_rc}
 %define customver 0.%{_rcver}
 %else
-%define customver 201
+%define customver 203
 %endif
 
 Release:%{customver}.nobara%{?dist}
@@ -72,11 +72,10 @@ Group: System Environment/Kernel
 Vendor: The Linux Community and CachyOS maintainer(s)
 URL: https://cachyos.org
 Source0: https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{_tarkver}.tar.xz
-%if 0%{?_is_rc}
-Source1: https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos-rc/config
-%else
-Source1: https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config
-%endif
+# Original upstream URLs before Nobara fork:
+# https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos-rc/config
+# https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config
+Source1: config
 
 # needed for kernel-tools
 Source2: kvm_stat.logrotate
@@ -84,11 +83,15 @@ Source2: kvm_stat.logrotate
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
 ExcludeArch:    %{ix86}
 
+# Upstream URL before Nobara fork:
+# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/all/0001-cachyos-base-all.patch
+# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/sched/0001-bore-cachy.patch
+# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/misc/0001-handheld.patch
 # Stable patches
-Patch0: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/all/0001-cachyos-base-all.patch
-Patch1: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/sched/0001-bore-cachy.patch
+Patch0: 0001-cachyos-base-all.patch
+Patch1: 0001-bore-cachy.patch
 # For handhelds
-Patch2: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/misc/0001-handheld.patch
+Patch2: 0001-handheld.patch
 
 # Nobara
 #surface
@@ -124,15 +127,14 @@ Patch13: 0001-Allow-to-set-custom-USB-pollrate-for-specific-device.patch
 Patch14: 0001-Add-xpadneo-bluetooth-hid-driver-module.patch
 # https://gitlab.freedesktop.org/drm/amd/-/issues/4263
 Patch15: drm-atomic-flip.1.patch
-
-# aarch64 patches
-Patch16: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
-Patch17: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
-Patch18: xe-nonx86.patch
-
 # Btrfs log corruption patch
 # https://www.phoronix.com/news/Btrfs-Log-Tree-Corruption-Fix
-Patch19: btrfs-fix-log-tree-replay.patch
+Patch16: btrfs-fix-log-tree-replay.patch
+
+# aarch64 patches
+Patch17: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
+Patch18: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
+Patch19: xe-nonx86.patch
 
 %define __spec_install_post /usr/lib/rpm/brp-compress || :
 %define debug_package %{nil}
@@ -441,11 +443,12 @@ patch -p1 -i %{PATCH12}
 patch -p1 -i %{PATCH13}
 patch -p1 -i %{PATCH14}
 patch -p1 -i %{PATCH15}
+patch -p1 -i %{PATCH16}
 
 # Apply aarch64 patches
-patch -p1 -i %{PATCH16}
 patch -p1 -i %{PATCH17}
 patch -p1 -i %{PATCH18}
+patch -p1 -i %{PATCH19}
 
 # Fetch the config and move it to the proper directory
 cp %{SOURCE1} .config
@@ -1133,6 +1136,13 @@ fi
 %files
 
 %changelog
+* Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-203
+- Use local sources only
+
+* Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-202
+- Actually apply patch for Btrfs log corruption
+- Do not build hid-asus-ally (prefer asus-ally-hid instead)
+
 * Wed Aug 06 2025 Luke Short <ekultails@gmail.com> - 6.15.8-201
 - Add fix for Btrfs log corruption
 
