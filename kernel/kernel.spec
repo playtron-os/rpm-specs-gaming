@@ -54,7 +54,7 @@ Version: %{_basekver}.%{_stablekver}
 %if 0%{?_is_rc}
 %define customver 0.%{_rcver}
 %else
-%define customver 202
+%define customver 203
 %endif
 
 Release:%{customver}.nobara%{?dist}
@@ -72,11 +72,10 @@ Group: System Environment/Kernel
 Vendor: The Linux Community and CachyOS maintainer(s)
 URL: https://cachyos.org
 Source0: https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{_tarkver}.tar.xz
-%if 0%{?_is_rc}
-Source1: https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos-rc/config
-%else
-Source1: https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config
-%endif
+# Original upstream URLs before Nobara fork:
+# https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos-rc/config
+# https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config
+Source1: config
 
 # needed for kernel-tools
 Source2: kvm_stat.logrotate
@@ -84,11 +83,15 @@ Source2: kvm_stat.logrotate
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
 ExcludeArch:    %{ix86}
 
+# Upstream URL before Nobara fork:
+# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/all/0001-cachyos-base-all.patch
+# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/sched/0001-bore-cachy.patch
+# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/misc/0001-handheld.patch
 # Stable patches
-Patch0: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/all/0001-cachyos-base-all.patch
-Patch1: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/sched/0001-bore-cachy.patch
+Patch0: 0001-cachyos-base-all.patch
+Patch1: 0001-bore-cachy.patch
 # For handhelds
-Patch2: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/misc/0001-handheld.patch
+Patch2: 0001-handheld.patch
 
 # Nobara
 #surface
@@ -1134,6 +1137,9 @@ fi
 %files
 
 %changelog
+* Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-203
+- Use local sources only
+
 * Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-202
 - Actually apply patch for Btrfs log corruption
 - Do not build hid-asus-ally (prefer asus-ally-hid instead)
