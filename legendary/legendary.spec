@@ -1,5 +1,5 @@
 Name:           legendary
-Version:        0.20.39
+Version:        0.20.40
 Release:        1.playtron
 Summary:        Free and open-source replacement for the Epic Games Launcher
 BuildArch:      noarch
@@ -54,6 +54,9 @@ done
 
 
 %changelog
+* Thu Sep 4 2025 Alesh Slovak <aleshslovak@gmail.com> 0.20.40-1.playtron
+- Update version
+
 * Fri Aug 22 2025 Alesh Slovak <aleshslovak@gmail.com> 0.20.39-1.playtron
 - Update version
 
