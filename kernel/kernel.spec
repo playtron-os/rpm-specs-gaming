@@ -136,6 +136,10 @@ Patch17: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
 Patch18: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
 Patch19: xe-nonx86.patch
 
+# OLED patches
+# https://gitlab.freedesktop.org/drm/amd/-/issues/3803
+Patch20: 0000-v3-1-6-drm-panel-backlight-quirks-Do-partial-refactor-and-apply-OLED.patch
+
 %define __spec_install_post /usr/lib/rpm/brp-compress || :
 %define debug_package %{nil}
 # Default compression algorithm
@@ -449,6 +453,9 @@ patch -p1 -i %{PATCH16}
 patch -p1 -i %{PATCH17}
 patch -p1 -i %{PATCH18}
 patch -p1 -i %{PATCH19}
+
+# Apply OLED patches
+patch -p1 -i %{PATCH20}
 
 # Fetch the config and move it to the proper directory
 cp %{SOURCE1} .config
