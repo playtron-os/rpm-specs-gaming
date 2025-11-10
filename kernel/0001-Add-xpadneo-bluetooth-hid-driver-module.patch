@@ -43,9 +43,9 @@ index a4b7d4e67..21d05ca05 100644
  
 +obj-$(CONFIG_HID_XPADNEO) += xpadneo/
 +
- obj-$(CONFIG_HID_IPTS)          += ipts/
- obj-$(CONFIG_HID_ITHC)          += ithc/
  obj-$(CONFIG_SPI_HID_APPLE_CORE)	+= spi-hid/
+ 
+ obj-$(CONFIG_HID_DOCKCHANNEL)   += dockchannel-hid/
 diff --git a/drivers/hid/xpadneo/Kconfig b/drivers/hid/xpadneo/Kconfig
 new file mode 100644
 index 000000000..bfa227780
