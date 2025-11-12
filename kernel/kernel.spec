@@ -37,8 +37,8 @@
 Name: kernel
 Summary: The Linux Kernel with Cachyos and Nobara Patches
 
-%define _basekver 6.15
-%define _stablekver 8
+%define _basekver 6.17
+%define _stablekver 7
 %define _rcver rc7
 %if %{_stablekver} == 0
 %define _tarkver %{_basekver}
@@ -54,7 +54,7 @@ Version: %{_basekver}.%{_stablekver}
 %if 0%{?_is_rc}
 %define customver 0.%{_rcver}
 %else
-%define customver 203
+%define customver 200
 %endif
 
 Release:%{customver}.nobara%{?dist}
@@ -72,10 +72,11 @@ Group: System Environment/Kernel
 Vendor: The Linux Community and CachyOS maintainer(s)
 URL: https://cachyos.org
 Source0: https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-%{_tarkver}.tar.xz
-# Original upstream URLs before Nobara fork:
-# https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos-rc/config
-# https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config
-Source1: config
+%if 0%{?_is_rc}
+Source1: https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos-rc/config
+%else
+Source1: https://raw.githubusercontent.com/CachyOS/linux-cachyos/master/linux-cachyos/config
+%endif
 
 # needed for kernel-tools
 Source2: kvm_stat.logrotate
@@ -83,58 +84,43 @@ Source2: kvm_stat.logrotate
 # https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
 ExcludeArch:    %{ix86}
 
-# Upstream URL before Nobara fork:
-# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/all/0001-cachyos-base-all.patch
-# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/sched/0001-bore-cachy.patch
-# https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/misc/0001-handheld.patch
 # Stable patches
-Patch0: 0001-cachyos-base-all.patch
-Patch1: 0001-bore-cachy.patch
+Patch0: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/all/0001-cachyos-base-all.patch
+Patch1: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/sched/0001-bore-cachy.patch
 # For handhelds
-Patch2: 0001-handheld.patch
+Patch2: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basekver}/misc/0001-handheld.patch
 
 # Nobara
 #surface
 Patch3: linux-surface.patch
-# Asus laptops
-Patch4: asus-linux.patch
 # rog ally/x
-Patch5: ROG-ALLY-NCT6775-PLATFORM.patch
-# ayaneo
-Patch6: bmi160_ayaneo.patch
+Patch4: ROG-ALLY-NCT6775-PLATFORM.patch
 # Logitech wheel
-Patch7: ps-logitech-wheel.patch
+Patch5: ps-logitech-wheel.patch
 # give kernel taint warning when amdgpu power controls are enabled
-Patch8: amdgpu.ppfeaturemask-taint_warning.patch
+Patch6: amdgpu.ppfeaturemask-taint_warning.patch
 # fixes framerate control in gamescope
-Patch9: valve-gamescope-framerate-control-fixups.patch
+Patch7: valve-gamescope-framerate-control-fixups.patch
 # fixes orientation on SuiPlay0X1
-Patch10: suiplay0x1-orientation-quirk.patch
-# fixes headphones on various Aya Neo devices
-Patch11: ayaneo-headset-fix.patch
+Patch8: suiplay0x1-orientation-quirk.patch
 
 # temporary patches
 # fixes HAINAN amdgpu card not being bootable
 # https://gitlab.freedesktop.org/drm/amd/-/issues/1839
-Patch12: amdgpu-HAINAN-variant-fixup.patch
+Patch9: amdgpu-HAINAN-variant-fixup.patch
 # Allow to set custom USB pollrate for specific devices like so:
 # usbcore.interrupt_interval_override=045e:00db:16,1bcf:0005:1
 # useful for setting polling rate of wired PS4/PS5 controller to 1000Hz
 # https://github.com/KarsMulder/Linux-Pollrate-Patch
 # https://gitlab.com/GloriousEggroll/nobara-images/-/issues/64
-Patch13: 0001-Allow-to-set-custom-USB-pollrate-for-specific-device.patch
+Patch10: 0001-Allow-to-set-custom-USB-pollrate-for-specific-device.patch
 # Add xpadneo as patch instead of using dkms module
-Patch14: 0001-Add-xpadneo-bluetooth-hid-driver-module.patch
-# https://gitlab.freedesktop.org/drm/amd/-/issues/4263
-Patch15: drm-atomic-flip.1.patch
-# Btrfs log corruption patch
-# https://www.phoronix.com/news/Btrfs-Log-Tree-Corruption-Fix
-Patch16: btrfs-fix-log-tree-replay.patch
+Patch11: 0001-Add-xpadneo-bluetooth-hid-driver-module.patch
 
 # aarch64 patches
-Patch17: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
-Patch18: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
-Patch19: xe-nonx86.patch
+Patch20: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
+Patch21: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
+Patch22: xe-nonx86.patch
 
 %define __spec_install_post /usr/lib/rpm/brp-compress || :
 %define debug_package %{nil}
@@ -214,7 +200,7 @@ Obsoletes: kernel <= %{rpmverobsolete}
 Obsoletes: akmod-v4l2loopback
 
 %description
-The kernel-%{flaver} meta package
+The kernel-%{flavor} meta package
 
 %package core
 Summary: Kernel core package
@@ -439,16 +425,11 @@ patch -p1 -i %{PATCH8}
 patch -p1 -i %{PATCH9}
 patch -p1 -i %{PATCH10}
 patch -p1 -i %{PATCH11}
-patch -p1 -i %{PATCH12}
-patch -p1 -i %{PATCH13}
-patch -p1 -i %{PATCH14}
-patch -p1 -i %{PATCH15}
-patch -p1 -i %{PATCH16}
 
 # Apply aarch64 patches
-patch -p1 -i %{PATCH17}
-patch -p1 -i %{PATCH18}
-patch -p1 -i %{PATCH19}
+patch -p1 -i %{PATCH20}
+patch -p1 -i %{PATCH21}
+patch -p1 -i %{PATCH22}
 
 # Fetch the config and move it to the proper directory
 cp %{SOURCE1} .config
@@ -1070,6 +1051,9 @@ fi
 
 %files tools -f cpupower.lang
 %{_bindir}/cpupower
+%{_libexecdir}/cpupower
+%{_unitdir}/cpupower.service
+%config(noreplace) %{_sysconfdir}/cpupower-service.conf
 %{_datadir}/bash-completion/completions/cpupower
 %ifarch x86_64
 %{_bindir}/centrino-decode
@@ -1136,15 +1120,89 @@ fi
 %files
 
 %changelog
-* Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-203
-- Use local sources only
+* Sun Nov 02 2025 LionHeartP <LionHeartP@proton.me> - 6.17.7-200
+- Update to 6.17.7
 
-* Wed Aug 13 2025 Luke Short <ekultails@gmail.com> - 6.15.8-202
-- Actually apply patch for Btrfs log corruption
-- Do not build hid-asus-ally (prefer asus-ally-hid instead)
+* Fri Oct 31 2025 LionHeartP <LionHeartP@proton.me> - 6.17.6-200
+- Update to 6.17.6
 
-* Wed Aug 06 2025 Luke Short <ekultails@gmail.com> - 6.15.8-201
-- Add fix for Btrfs log corruption
+* Sat Oct 25 2025 LionHeartP <LionHeartP@proton.me> - 6.17.5-200
+- Update to 6.17.5
+
+* Mon Oct 20 2025 LionHeartP <LionHeartP@proton.me> - 6.17.4-201
+- Update cachy patch
+
+* Mon Oct 20 2025 LionHeartP <LionHeartP@proton.me> - 6.17.4-200
+- Update to 6.17.4
+
+* Wed Oct 15 2025 LionHeartP <LionHeartP@proton.me> - 6.17.3-201
+- Update Cachy patches for vmd regression fix
+
+* Wed Oct 15 2025 LionHeartP <LionHeartP@proton.me> - 6.17.3-200
+- Update to 6.17.3
+
+* Mon Oct 13 2025 LionHeartP <LionHeartP@proton.me> - 6.17.2-200
+- Update to 6.17.2
+
+* Mon Oct 06 2025 LionHeartP <LionHeartP@proton.me> - 6.17.1-200
+- Update to 6.17.1
+
+* Tue Sep 30 2025 LionHeartP <LionHeartP@proton.me> - 6.17.0-201
+- Revert BORE to 6.5.2
+
+* Tue Sep 30 2025 LionHeartP <LionHeartP@proton.me> - 6.17.0-200
+- Update to 6.17.0
+- Remove asus-linux and ayaneo-headset-fix patches (upstreamed)
+
+* Thu Sep 25 2025 LionHeartP <LionHeartP@proton.me> - 6.16.9-200
+- Update to 6.16.9
+
+* Sat Sep 20 2025 LionHeartP <LionHeartP@proton.me> - 6.16.8-200
+- Update to 6.16.8
+
+* Fri Sep 12 2025 LionHeartP <LionHeartP@proton.me> - 6.16.7-200
+- Update to 6.16.7
+
+* Tue Sep 09 2025 LionHeartP <LionHeartP@proton.me> - 6.16.6-200
+- Update to 6.16.6
+
+* Fri Sep 05 2025 LionHeartP <LionHeartP@proton.me> - 6.16.5-200
+- Update to 6.16.5
+- Rebase ayaneo-headset-fix.patch
+
+* Thu Aug 28 2025 LionHeartP <LionHeartP@proton.me> - 6.16.4-201
+- Update tearing patch via cachy
+
+* Thu Aug 28 2025 LionHeartP <LionHeartP@proton.me> - 6.16.4-200
+- Update to 6.16.4
+- Rebase valve-gamescope-framerate-control-fixups.patch
+
+* Sat Aug 23 2025 LionHeartP <LionHeartP@proton.me> - 6.16.3-201
+- Add ipv4-regression-fix.patch
+- Update config
+
+* Sat Aug 23 2025 LionHeartP <LionHeartP@proton.me> - 6.16.3-200
+- Update to 6.16.3
+
+* Thu Aug 21 2025 LionHeartP <LionHeartP@proton.me> - 6.16.2-200
+- Update to 6.16.2
+
+* Tue Aug 19 2025 LionHeartP <LionHeartP@proton.me> - 6.16.1-202
+- Update and enable linux-surface.patch
+
+* Sat Aug 16 2025 LionHeartP <LionHeartP@proton.me> - 6.16.1-201
+- Update cachyos patches
+
+* Fri Aug 15 2025 LionHeartP <LionHeartP@proton.me> - 6.16.1-200
+- Update to 6.16.1
+- Remove drm-atomic-flip.1.patch, now provided by 0001-cachyos-base-all.patch
+
+* Mon Jul 28 2025 LionHeartP <LionHeartP@proton.me> - 6.16.0-200
+- Update to 6.16.0
+- Update drm-atomic-flip.1.patch with patch from LKML
+  https://lore.kernel.org/amd-gfx/20250723150413.18445-1-xaver.hugl@kde.org/T/#u
+- Remove bmi160_ayaneo.patch (upstreamed)
+- Disable linux-surface.patch until rebase
 
 * Thu Jul 24 2025 LionHeartP <LionHeartP@proton.me> - 6.15.8-200
 - Update to 6.15.8

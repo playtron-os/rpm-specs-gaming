@@ -40,4 +40,4 @@ jobs:
           copr_url = https://copr.fedorainfracloud.org
           EOF
       - name: Upload the source RPM to Fedora Copr
-        run: copr-cli build --exclude-chroot fedora-41-aarch64 --exclude-chroot fedora-42-aarch64 --exclude-chroot fedora-41-i386 --exclude-chroot fedora-42-i386 gaming ~/rpmbuild/SRPMS/valve-firmware-*.src.rpm
+        run: copr-cli build --exclude-chroot fedora-41-aarch64 --exclude-chroot fedora-42-aarch64 --exclude-chroot fedora-43-aarch64 --exclude-chroot fedora-41-i386 --exclude-chroot fedora-42-i386--exclude-chroot fedora-43-i386 gaming ~/rpmbuild/SRPMS/valve-firmware-*.src.rpm
