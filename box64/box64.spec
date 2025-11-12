@@ -7,10 +7,10 @@
 Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux
 systems, like ARM (host system needs to be 64-bit little-endian).}
 
-%define hash a9f4e72c4b4f15289c8eef0b9be0359e2acf50dc
+%define hash 6af34e0c4394991d58ac782ab020aad5ad3fa2a3
 
 Name:           box64
-Version:        %{hash}
+Version:        0.3.8+7298
 Release:        %autorelease
 Summary:        Linux userspace x86_64 emulator with a twist, targeted at ARM64
 
@@ -278,7 +278,7 @@ This package contains a version of box64 targeting Nvidia Tegra X1 systems.
 %endif
 
 %prep
-%autosetup -p1
+%autosetup -p1 -n box64-%{hash}
 
 # Remove prebuilt libraries
 rm -r x64lib
