@@ -33,6 +33,11 @@ clean: ## Clean all built RPMs
 
 ##@ Packages
 
+.PHONY: box64
+box64: ## Build box64 RPM
+	$(MAKE) build TARGET_DIR=box64
+
+
 .PHONY: gamescope-plus
 gamescope-plus: ## Build gamescope-plus RPM
 	$(MAKE) build TARGET_DIR=gamescope-plus
