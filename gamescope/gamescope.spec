@@ -3,7 +3,7 @@
 %global reshade_shortcommit %(c=%{reshade_commit}; echo ${c:0:7})
 
 Name:           gamescope
-Version:        3.16.17
+Version:        3.16.18
 Release:        %autorelease
 Summary:        Micro-compositor for video games on Wayland
 # Automatically converted from old format: BSD - review is highly recommended.
@@ -24,18 +24,7 @@ Patch:          0001-cstdint.patch
 # We use/package rest from the forks, I've tried to verify that wlroots match relevant commits
 # We'll hold on rebases of gamescope if tags diverge in the future
 Patch:          Allow-to-use-system-wlroots.patch
-Patch:          Switch-wlroots-to-the-new-pc-filename.patch
-Patch:          Add-pixman-udev-deps.patch
 Patch:          Use-system-stb-glm.patch
-
-# HDR fixup for KDE Plasma
-# https://github.com/ValveSoftware/gamescope/pull/1999
-# https://bugzilla.redhat.com/show_bug.cgi?id=2412031
-Patch:          1999.patch
-
-# Fixup GNOME/mutter support
-# https://github.com/ValveSoftware/gamescope/pull/1867
-Patch:          1867.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc
