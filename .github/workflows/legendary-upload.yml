@@ -12,7 +12,7 @@ jobs:
     name: Upload legendary source RPM to Fedora Copr
     runs-on: ubuntu-22.04
     container:
-      image: fedora:41
+      image: fedora:42
     env:
       FEDORA_COPR_LOGIN: ${{ secrets.FEDORA_COPR_LOGIN }}
       FEDORA_COPR_TOKEN: ${{ secrets.FEDORA_COPR_TOKEN }}
