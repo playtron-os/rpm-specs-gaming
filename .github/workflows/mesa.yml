@@ -11,7 +11,7 @@ jobs:
     name: Test mesa RPM build
     runs-on: ubuntu-22.04
     container:
-      image: fedora:41
+      image: fedora:42
     steps:
       - uses: actions/checkout@v3
       - name: Install RPM build dependencies
@@ -24,6 +24,20 @@ jobs:
         run: spectool -g -R ${GITHUB_WORKSPACE}/mesa/*.spec
       - name: Build the source RPM
         run: rpmbuild -bs ${GITHUB_WORKSPACE}/mesa/*.spec
+      - name: Enable the Playtron App repository to install DirectX-Headers-devel
+        run: |
+          cat <<EOF > /etc/yum.repos.d/playtron-app-x86_64.repo
+          [playtron-app-x86_64]
+          name=Playtron Labs and App repository
+          baseurl=https://playtron-dev2-global-os-public.s3.us-west-2.amazonaws.com/repos/playtron-app/x86_64/
+          type=rpm-md
+          skip_if_unavailable=False
+          gpgkey=https://playtron-dev2-global-os-public.s3.us-west-2.amazonaws.com/gpg-public-keys/RPM-GPG-KEY-playtronos
+          gpgcheck=0
+          repo_gpgcheck=0
+          enabled=1
+          enabled_metadata=1
+          EOF
       - name: Install the DNF build dependencies plugin
         run: dnf -y install 'dnf-command(builddep)'
       - name: Install the required build dependencies.
