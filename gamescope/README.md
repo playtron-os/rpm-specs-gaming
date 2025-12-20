@@ -1,3 +1,0 @@
-# gamescope
-
-The gamescope package
