@@ -4,7 +4,7 @@
 
 Name:           gamescope
 Version:        3.16.19
-Release:        %autorelease
+Release:        2
 Summary:        Micro-compositor for video games on Wayland
 # Automatically converted from old format: BSD - review is highly recommended.
 License:        LicenseRef-Callaway-BSD
@@ -25,6 +25,9 @@ Patch:          0001-cstdint.patch
 # We'll hold on rebases of gamescope if tags diverge in the future
 Patch:          Allow-to-use-system-wlroots.patch
 Patch:          Use-system-stb-glm.patch
+
+
+Patch:          fix-null-dereference.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc
