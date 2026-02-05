@@ -78,7 +78,7 @@
 
 Name:           mesa
 Summary:        Mesa graphics libraries
-%global ver 25.3.3
+%global ver 25.3.4
 Version:        %{gsub %ver - ~}
 Release:        %autorelease
 License:        MIT AND BSD-3-Clause AND SGI-B-2.0
@@ -107,11 +107,8 @@ Source13:       https://crates.io/api/v1/crates/syn/%{rust_syn_ver}/download#/sy
 Source14:       https://crates.io/api/v1/crates/unicode-ident/%{rust_unicode_ident_ver}/download#/unicode-ident-%{rust_unicode_ident_ver}.tar.gz
 Source15:       https://crates.io/api/v1/crates/rustc-hash/%{rustc_hash_ver}/download#/rustc-hash-%{rustc_hash_ver}.tar.gz
 
-# fix zink/device-select bug
-Patch10:        0001-device-select-add-a-layer-setting-to-disable-device-.patch
-Patch11:        0002-zink-use-device-select-layer-settings-to-disable-dev.patch
 # Teflon: https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/38532
-Patch12:        mesa-38532.patch
+Patch10:        mesa-38532.patch
 
 BuildRequires:  meson >= 1.3.0
 BuildRequires:  gcc
