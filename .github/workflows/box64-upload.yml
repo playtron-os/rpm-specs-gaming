@@ -44,4 +44,4 @@ jobs:
           copr_url = https://copr.fedorainfracloud.org
           EOF
       - name: Upload the source RPM to Fedora Copr
-        run: copr-cli build --exclude-chroot fedora-42-i386 --exclude-chroot fedora-43-i386 --exclude-chroot fedora-42-x86_64 --exclude-chroot fedora-43-x86_64 gaming ~/rpmbuild/SRPMS/${PACKAGE_NAME}-*.src.rpm
+        run: copr-cli build gaming --exclude-chroot fedora-42-i386 --exclude-chroot fedora-43-i386 --exclude-chroot fedora-42-x86_64 --exclude-chroot fedora-43-x86_64 ~/rpmbuild/SRPMS/${PACKAGE_NAME}-*.src.rpm
