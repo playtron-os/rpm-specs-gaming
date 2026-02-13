@@ -1,5 +1,6 @@
 %global appname MangoHud
 %global forgeurl https://github.com/flightlessmango/MangoHud
+%define hash cb3b53ed87bdabf215b16340ff72baf7f5661d1d
 
 %global imgui_ver 1.91.6
 %global imgui_wrap_ver 2
@@ -8,20 +9,18 @@
 %global implot_ver 0.16
 %global implot_wrap_ver 2
 
-%global tarball_version %%(echo %{version} | tr '~' '-')
-
 # TODO: try to fix amdgpu tests
 %bcond_with tests
 
 Name:           mangohud
-Version:        0.8.3~rc1
+Version:        0.8.3~rc1+20
 %forgemeta
 Release:        %autorelease
 Summary:        Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load
 
 License:        MIT
 URL:            %{forgeurl}
-Source0:        %{url}/archive/v%{tarball_version}/%{name}-%{tarball_version}.tar.gz
+Source0:         %{forgeurl}/archive/%{hash}.tar.gz
 # imgui
 Source1:        https://github.com/ocornut/imgui/archive/v%{imgui_ver}/imgui-%{imgui_ver}.tar.gz
 Source2:        https://wrapdb.mesonbuild.com/v%{imgui_wrap_ver}/imgui_%{imgui_ver}-1/get_patch#/imgui-%{imgui_ver}-wrap.zip
@@ -94,13 +93,13 @@ Local visualization "mangoplot" for %{name}.
 
 
 %prep
-%autosetup -n %{appname}-%{tarball_version} -p1
-%setup -qn %{appname}-%{tarball_version} -D -T -a1
-%setup -qn %{appname}-%{tarball_version} -D -T -a2
-%setup -qn %{appname}-%{tarball_version} -D -T -a3
-%setup -qn %{appname}-%{tarball_version} -D -T -a4
-%setup -qn %{appname}-%{tarball_version} -D -T -a5
-%setup -qn %{appname}-%{tarball_version} -D -T -a6
+%autosetup -n MangoHud-%{hash} -p1
+%setup -qn MangoHud-%{hash} -D -T -a1
+%setup -qn MangoHud-%{hash} -D -T -a2
+%setup -qn MangoHud-%{hash} -D -T -a3
+%setup -qn MangoHud-%{hash} -D -T -a4
+%setup -qn MangoHud-%{hash} -D -T -a5
+%setup -qn MangoHud-%{hash} -D -T -a6
 
 # imgui
 mv imgui-%{imgui_ver} subprojects/
