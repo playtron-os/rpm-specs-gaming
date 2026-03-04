@@ -15,8 +15,8 @@ diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/adm
 index dbd26fde4..c9b8b80af 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6552,6 +6552,14 @@
- 					delay after resetting its port);
+@@ -7927,6 +7927,14 @@
+ 					request from 5000 ms to 500 ms);
  			Example: quirks=0781:5580:bk,0a5c:5834:gij
  
 +	usbcore.interrupt_interval_override=
@@ -184,19 +184,20 @@ index 48bc8a481..84bd550ad 100644
  static int find_next_descriptor(unsigned char *buffer, int size,
      int dt1, int dt2, int *num_skipped)
  {
-@@ -261,7 +404,7 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
+@@ -293,7 +436,7 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
  	struct usb_endpoint_descriptor *d;
  	struct usb_host_endpoint *endpoint;
  	int n, i, j, retval;
 -	unsigned int maxp;
 +	unsigned int maxp, ival;
  	const unsigned short *maxpacket_maxes;
+ 	u16 bcdUSB;
  
- 	d = (struct usb_endpoint_descriptor *) buffer;
-@@ -386,6 +529,23 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
+@@ -431,6 +574,23 @@ static int usb_parse_endpoint(struct device *ddev, int cfgno,
+ 		    d->bEndpointAddress, d->bInterval, n);
  		endpoint->desc.bInterval = n;
  	}
- 
++	
 +	/* Override the interrupt polling interval if a module parameter tells us to do so. */
 +	if (usb_endpoint_xfer_int(d)) {
 +		ival = usb_check_interrupt_interval_override(udev);
@@ -213,11 +214,10 @@ index 48bc8a481..84bd550ad 100644
 +			}
 +		}
 +	}
-+
+ 
  	/* Some buggy low-speed devices have Bulk endpoints, which is
  	 * explicitly forbidden by the USB spec.  In an attempt to make
- 	 * them usable, we will try treating them as Interrupt endpoints.
-@@ -1092,3 +1252,11 @@ int usb_get_bos_descriptor(struct usb_device *dev)
+@@ -1144,3 +1304,11 @@ err:
  	usb_release_bos_descriptor(dev);
  	return ret;
  }
@@ -233,7 +233,7 @@ diff --git a/drivers/usb/core/usb.c b/drivers/usb/core/usb.c
 index 11b15d7b3..ec52c6322 100644
 --- a/drivers/usb/core/usb.c
 +++ b/drivers/usb/core/usb.c
-@@ -1066,6 +1066,7 @@ static void __exit usb_exit(void)
+@@ -1272,6 +1272,7 @@ static void __exit usb_exit(void)
  		return;
  
  	usb_release_quirk_list();
@@ -245,7 +245,7 @@ diff --git a/drivers/usb/core/usb.h b/drivers/usb/core/usb.h
 index 82538daac..b6faa897c 100644
 --- a/drivers/usb/core/usb.h
 +++ b/drivers/usb/core/usb.h
-@@ -37,6 +37,7 @@ extern void usb_authorize_interface(struct usb_interface *);
+@@ -38,6 +38,7 @@ extern void usb_authorize_interface(struct usb_interface *);
  extern void usb_detect_quirks(struct usb_device *udev);
  extern void usb_detect_interface_quirks(struct usb_device *udev);
  extern void usb_release_quirk_list(void);
