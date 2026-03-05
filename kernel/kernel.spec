@@ -40,7 +40,7 @@
 %endif
 
 Name: kernel
-Summary: The Linux Kernel with Cachyos and Nobara Patches
+Summary: Playtron kernel optimized for AI and gaming
 
 %define _basekver 6.18
 %define _stablekver 9
@@ -62,7 +62,7 @@ Version: %{_basekver}.%{_stablekver}
 %define customver 201
 %endif
 
-Release:%{customver}.nobara%{?dist}
+Release:%{customver}.playtron%{?dist}
 
 # Define rawhide fedora version
 %define _rawhidever 44
@@ -424,7 +424,7 @@ patch -p1 -i %{PATCH0}
 # Apply EEVDF and BORE patches
 patch -p1 -i %{PATCH1}
 
-# Apply Nobara patches:
+# Apply patches:
 patch -p1 -i %{PATCH2}
 patch -p1 -i %{PATCH3}
 patch -p1 -i %{PATCH4}
