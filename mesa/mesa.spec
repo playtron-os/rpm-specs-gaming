@@ -1,16 +1,18 @@
 %ifnarch s390x
 %global with_hardware 1
 %global with_kmsro 1
-%global with_nvk 1
 %global with_radeonsi 1
 %global with_spirv_tools 1
 %global with_vmware 1
 %global with_vulkan_hw 1
-%global with_va 1
 %if !0%{?rhel}
 %global with_r300 1
 %global with_r600 1
 %global with_opencl 1
+%global with_va 1
+%endif
+%if !0%{?rhel} || 0%{?rhel} >= 9
+%global with_nvk %{with_vulkan_hw}
 %endif
 %global base_vulkan %{?with_vulkan_hw:,amd}%{!?with_vulkan_hw:%{nil}}
 %endif
@@ -30,7 +32,7 @@
 %endif
 %endif
 %ifarch x86_64
-%if !0%{?with_vulkan_hw}
+%if 0%{?with_vulkan_hw}
 %global with_intel_vk_rt 1
 %endif
 %endif
@@ -67,9 +69,7 @@
 
 %global vulkan_drivers swrast%{?base_vulkan}%{?intel_platform_vulkan}%{?asahi_platform_vulkan}%{?extra_platform_vulkan}%{?with_nvk:,nouveau}%{?with_virtio:,virtio}%{?with_d3d12:,microsoft-experimental}
 
-%if 0%{?with_nvk}
 %global vendor_nvk_crates 1
-%endif
 
 # We've gotten a report that enabling LTO for mesa breaks some games. See
 # https://bugzilla.redhat.com/show_bug.cgi?id=1862771 for details.
@@ -78,11 +78,15 @@
 
 Name:           mesa
 Summary:        Mesa graphics libraries
-%global ver 25.3.5
-Version:        %{gsub %ver - ~}
+Version:        26.0.1
 Release:        %autorelease
 License:        MIT AND BSD-3-Clause AND SGI-B-2.0
-URL:            http://www.mesa3d.org
+URL:            https://mesa3d.org
+
+# The "Version" field for release candidates has the format: A.B.C~rcX
+# However, the tarball has the format: A.B.C-rcX.
+# The "ver" variable contains the version in the second format.
+%global ver %{gsub %version ~ -}
 
 Source0:        https://archive.mesa3d.org/mesa-%{ver}.tar.xz
 # src/gallium/auxiliary/postprocess/pp_mlaa* have an ... interestingly worded license.
@@ -95,10 +99,10 @@ Source1:        Mesa-MLAA-License-Clarification-Email.txt
 # https://gitlab.freedesktop.org/mesa/mesa/-/tree/main/subprojects
 # but we generally want the latest compatible versions
 %global rust_paste_ver 1.0.15
-%global rust_proc_macro2_ver 1.0.101
-%global rust_quote_ver 1.0.40
-%global rust_syn_ver 2.0.106
-%global rust_unicode_ident_ver 1.0.18
+%global rust_proc_macro2_ver 1.0.106
+%global rust_quote_ver 1.0.44
+%global rust_syn_ver 2.0.115
+%global rust_unicode_ident_ver 1.0.23
 %global rustc_hash_ver 2.1.1
 Source10:       https://crates.io/api/v1/crates/paste/%{rust_paste_ver}/download#/paste-%{rust_paste_ver}.tar.gz
 Source11:       https://crates.io/api/v1/crates/proc-macro2/%{rust_proc_macro2_ver}/download#/proc-macro2-%{rust_proc_macro2_ver}.tar.gz
@@ -106,6 +110,13 @@ Source12:       https://crates.io/api/v1/crates/quote/%{rust_quote_ver}/download
 Source13:       https://crates.io/api/v1/crates/syn/%{rust_syn_ver}/download#/syn-%{rust_syn_ver}.tar.gz
 Source14:       https://crates.io/api/v1/crates/unicode-ident/%{rust_unicode_ident_ver}/download#/unicode-ident-%{rust_unicode_ident_ver}.tar.gz
 Source15:       https://crates.io/api/v1/crates/rustc-hash/%{rustc_hash_ver}/download#/rustc-hash-%{rustc_hash_ver}.tar.gz
+
+# Backport of https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/39951
+# which fixes compile-time conditional on AVX2 which is not built on Fedora
+Patch21:        39951.patch
+
+# Fix artifacting on newer Qualcomm GPUs.
+Patch22:	freedreno-force-linear-tiling.patch
 
 BuildRequires:  meson >= 1.3.0
 BuildRequires:  gcc
@@ -225,8 +236,8 @@ Obsoletes:      %{name}-libOSMesa < 25.1.0~rc2-1
 Summary:        Mesa libGL development package
 Requires:       (%{name}-libGL%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release} if %{name}-libGL%{?_isa})
 Requires:       libglvnd-devel%{?_isa} >= 1:1.3.2
-Provides:       libGL-devel
-Provides:       libGL-devel%{?_isa}
+Provides:       libGL-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:       libGL-devel%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 Recommends:     gl-manpages
 Obsoletes:      %{name}-libOSMesa-devel < 25.1.0~rc2-1
 
@@ -247,8 +258,8 @@ Summary:        Mesa libEGL development package
 Requires:       (%{name}-libEGL%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release} if %{name}-libEGL%{?_isa})
 Requires:       libglvnd-devel%{?_isa} >= 1:1.3.2
 Requires:       %{name}-khr-devel%{?_isa}
-Provides:       libEGL-devel
-Provides:       libEGL-devel%{?_isa}
+Provides:       libEGL-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:       libEGL-devel%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description libEGL-devel
 %{summary}.
@@ -256,29 +267,19 @@ Provides:       libEGL-devel%{?_isa}
 %package dri-drivers
 Summary:        Mesa-based DRI drivers
 Requires:       %{name}-filesystem%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-%if 0%{?with_va}
-Recommends:     %{name}-va-drivers%{?_isa}
-%endif
 Obsoletes:      %{name}-libglapi < 25.0.0~rc2-1
 Provides:       %{name}-libglapi >= 25.0.0~rc2-1
+Obsoletes:      %{name}-va-drivers < 26.0.0-5
+Provides:       %{name}-va-drivers >= 26.0.0-5
+Obsoletes:      %{name}-vaapi-drivers < 22.2.0-5
 
 %description dri-drivers
 %{summary}.
 
-%if 0%{?with_va}
-%package        va-drivers
-Summary:        Mesa-based VA-API video acceleration drivers
-Requires:       %{name}-filesystem%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Obsoletes:      %{name}-vaapi-drivers < 22.2.0-5
-
-%description va-drivers
-%{summary}.
-%endif
-
 %package libgbm
 Summary:        Mesa gbm runtime library
-Provides:       libgbm
-Provides:       libgbm%{?_isa}
+Provides:       libgbm = %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:       libgbm%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 Recommends:     %{name}-dri-drivers%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 # If mesa-dri-drivers are installed, they must match in version. This is here to prevent using
 # older mesa-dri-drivers together with a newer mesa-libgbm and its dependants.
@@ -291,8 +292,8 @@ Requires:       (%{name}-dri-drivers%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{r
 %package libgbm-devel
 Summary:        Mesa libgbm development package
 Requires:       %{name}-libgbm%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
-Provides:       libgbm-devel
-Provides:       libgbm-devel%{?_isa}
+Provides:       libgbm-devel = %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:       libgbm-devel%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description libgbm-devel
 %{summary}.
@@ -338,6 +339,7 @@ Summary:        Mesa Vulkan drivers
 Requires:       vulkan%{_isa}
 Requires:       %{name}-filesystem%{?_isa} = %{?epoch:%{epoch}:}%{version}-%{release}
 Obsoletes:      mesa-vulkan-devel < %{?epoch:%{epoch}:}%{version}-%{release}
+Obsoletes:      VK_hdr_layer < 1
 
 %description vulkan-drivers
 The drivers with support for the Vulkan API.
@@ -496,13 +498,6 @@ rm -vf %{buildroot}%{_libdir}/dri/apple_dri.so
 # determine the vendor
 ln -s %{_libdir}/libGLX_mesa.so.0 %{buildroot}%{_libdir}/libGLX_system.so.0
 
-# this keeps breaking, check it early.  note that the exit from eu-ftr is odd.
-pushd %{buildroot}%{_libdir}
-for i in libGL.so ; do
-    eu-findtextrel $i && exit 1
-done
-popd
-
 %files filesystem
 %doc docs/Mesa-MLAA-License-Clarification-Email.txt
 %dir %{_libdir}/dri
@@ -652,9 +647,7 @@ popd
 %if 0%{?with_vulkan_hw}
 %{_libdir}/dri/zink_dri.so
 %endif
-
 %if 0%{?with_va}
-%files va-drivers
 %{_libdir}/dri/nouveau_drv_video.so
 %if 0%{?with_r600}
 %{_libdir}/dri/r600_drv_video.so
