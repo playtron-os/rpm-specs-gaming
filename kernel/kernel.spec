@@ -1161,6 +1161,10 @@ fi
 %files
 
 %changelog
+* Sat Mar 07 2026 Luke Short <ekultails@gmail.com> - 6.18.16-200
+- Update to 6.18.16
+- Change from AppArmor to SELinux for mandatory access control
+
 * Sat Feb 07 2026 LionHeartP <LionHeartP@proton.me> - 6.18.9-201
 - Only apply aarch86 patches if building for aarch86
 
