@@ -43,7 +43,7 @@ Name: kernel
 Summary: Playtron kernel optimized for AI and gaming
 
 %define _basekver 6.18
-%define _stablekver 9
+%define _stablekver 16
 %define _rcver rc7
 %if %{_stablekver} == 0
 %define _tarkver %{_basekver}
@@ -97,7 +97,8 @@ Patch2: https://raw.githubusercontent.com/CachyOS/kernel-patches/master/%{_basek
 
 # Nobara
 #surface
-Patch3: linux-surface.patch
+#TODO: requires a rebase
+#Patch3: linux-surface.patch
 # rog ally/x
 Patch4: ROG-ALLY-NCT6775-PLATFORM.patch
 # Logitech wheel
@@ -426,7 +427,8 @@ patch -p1 -i %{PATCH1}
 
 # Apply patches:
 patch -p1 -i %{PATCH2}
-patch -p1 -i %{PATCH3}
+#TODO: requires a rebase
+#patch -p1 -i %{PATCH3}
 patch -p1 -i %{PATCH4}
 patch -p1 -i %{PATCH5}
 patch -p1 -i %{PATCH6}
