@@ -16,6 +16,7 @@ BuildRequires:  clang
 BuildRequires:  libgcc
 BuildRequires:  gn
 BuildRequires:  ninja-build
+BuildRequires:  fontconfig-devel
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(nspr)
 BuildRequires:  pkgconfig(nss)
