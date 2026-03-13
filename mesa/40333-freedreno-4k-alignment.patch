@@ -1,0 +1,42 @@
+From 3d4792d57789ea13e9ae487b6d48568832478023 Mon Sep 17 00:00:00 2001
+From: Rob Clark <rob.clark@oss.qualcomm.com>
+Date: Tue, 10 Mar 2026 15:14:39 -0700
+Subject: [PATCH] freedreno/fdl: Use 4k alignment for tiled
+
+Tiled-but-not-UBWC images should also have 4k alignment.
+
+Cc: mesa-stable
+Signed-off-by: Rob Clark <rob.clark@oss.qualcomm.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/40333>
+---
+ src/freedreno/fdl/fd6_layout.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
+
+diff --git a/src/freedreno/fdl/fd6_layout.c b/src/freedreno/fdl/fd6_layout.c
+index cc677364861d..67491abe6116 100644
+--- a/src/freedreno/fdl/fd6_layout.c
++++ b/src/freedreno/fdl/fd6_layout.c
+@@ -88,19 +88,7 @@ fdl6_tile_alignment(struct fdl_layout *layout, uint32_t *heightalign)
+       layout->pitchalign = 2;
+    }
+ 
+-   /* Empirical evidence suggests that images with UBWC could have much
+-    * looser alignment requirements, however the validity of alignment is
+-    * heavily undertested and the "officially" supported alignment is 4096b.
+-    */
+-   if (layout->ubwc || util_format_is_depth_or_stencil(layout->format) ||
+-       fdl6_is_r8g8_layout(layout))
+-      layout->base_align = 4096;
+-   else if (layout->cpp == 1)
+-      layout->base_align = 64;
+-   else if (layout->cpp == 2)
+-      layout->base_align = 128;
+-   else
+-      layout->base_align = 256;
++   layout->base_align = 4096;
+ }
+ 
+ /* NOTE: good way to test this is:  (for example)
+-- 
+GitLab
+

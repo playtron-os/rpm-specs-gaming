@@ -116,7 +116,7 @@ Source15:       https://crates.io/api/v1/crates/rustc-hash/%{rustc_hash_ver}/dow
 Patch21:        39951.patch
 
 # Fix artifacting on newer Qualcomm GPUs.
-Patch22:	freedreno-force-linear-tiling.patch
+Patch22:	40333-freedreno-4k-alignment.patch
 
 BuildRequires:  meson >= 1.3.0
 BuildRequires:  gcc
