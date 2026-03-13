@@ -43,7 +43,7 @@ Name: kernel
 Summary: Playtron kernel optimized for AI and gaming
 
 %define _basekver 6.18
-%define _stablekver 16
+%define _stablekver 17
 %define _rcver rc7
 %if %{_stablekver} == 0
 %define _tarkver %{_basekver}
@@ -1161,6 +1161,9 @@ fi
 %files
 
 %changelog
+* Fri Mar 13 2026 Luke Short <ekultails@gmail.com> - 6.18.17-200
+- Update to 6.18.17
+
 * Sat Mar 07 2026 Luke Short <ekultails@gmail.com> - 6.18.16-200
 - Update to 6.18.16
 - Change from AppArmor to SELinux for mandatory access control
