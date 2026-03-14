@@ -63,6 +63,11 @@ legendary: ## Build legendary RPM
 	$(MAKE) build TARGET_DIR=legendary
 
 
+.PHONY: libpdfium
+libpdfium: ## Build libpdfium RPM
+	$(MAKE) build TARGET_DIR=libpdfium
+
+
 .PHONY: mangohud
 mangohud: ## Build mangohud RPM
 	$(MAKE) build TARGET_DIR=mangohud
