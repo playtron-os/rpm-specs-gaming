@@ -81,6 +81,16 @@ cd %{_builddir}/pdfium_repo/pdfium
 
 # Install library
 install -Dpm 755 out/Release/libpdfium.so "%{buildroot}%{_libdir}/libpdfium.so"
+install -Dpm 755 out/Release/libchrome_zlib.so "%{buildroot}%{_libdir}/libchrome_zlib.so"
+install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_allocator_base.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_base.so"
+install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_allocator_core.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_core.so"
+install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so"
+install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_raw_ptr.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_raw_ptr.so"
+install -Dpm 755 out/Release/libskia.so "%{buildroot}%{_libdir}/libskia.so"
+install -Dpm 755 out/Release/libthird_party_abseil-cpp_absl.so "%{buildroot}%{_libdir}/libthird_party_abseil-cpp_absl.so"
+install -Dpm 755 out/Release/libthird_party_harfbuzz-ng.so "%{buildroot}%{_libdir}/libthird_party_harfbuzz-ng.so"
+install -Dpm 755 out/Release/libc++.so "%{buildroot}%{_libdir}/libc++.so"
+install -Dpm 755 out/Release/libicuuc.so "%{buildroot}%{_libdir}/libicuuc.so"
 
 # Install headers
 install -d %{buildroot}%{_includedir}/pdfium
@@ -104,6 +114,16 @@ EOF
 
 %files
 %{_libdir}/libpdfium.so
+%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_base.so
+%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_core.so
+%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so
+%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_raw_ptr.so
+%{_libdir}/libchrome_zlib.so
+%{_libdir}/libskia.so
+%{_libdir}/libthird_party_abseil-cpp_absl.so
+%{_libdir}/libthird_party_harfbuzz-ng.so
+%{_libdir}/libc++.so
+%{_libdir}/libicuuc.so
 %{_libdir}/pkgconfig/pdfium.pc
 %{_includedir}/pdfium/
 
