@@ -24,6 +24,11 @@
 %define asmarch x86
 %endif
 
+%ifarch aarch64
+%define karch arm64
+%define asmarch arm64
+%endif
+
 # define git branch to make testing easier without merging to master branch
 %define _git_branch master
 
@@ -37,8 +42,8 @@
 Name: kernel
 Summary: The Linux Kernel with Cachyos and Nobara Patches
 
-%define _basekver 6.17
-%define _stablekver 7
+%define _basekver 6.19
+%define _stablekver 8
 %define _rcver rc7
 %if %{_stablekver} == 0
 %define _tarkver %{_basekver}
@@ -60,7 +65,7 @@ Version: %{_basekver}.%{_stablekver}
 Release:%{customver}.nobara%{?dist}
 
 # Define rawhide fedora version
-%define _rawhidever 43
+%define _rawhidever 44
 
 %define rpmver %{version}-%{release}
 %define rpmverobsolete 6.12.9-200.fsync%{?dist}
@@ -97,30 +102,39 @@ Patch3: linux-surface.patch
 Patch4: ROG-ALLY-NCT6775-PLATFORM.patch
 # Logitech wheel
 Patch5: ps-logitech-wheel.patch
-# give kernel taint warning when amdgpu power controls are enabled
-Patch6: amdgpu.ppfeaturemask-taint_warning.patch
 # fixes framerate control in gamescope
-Patch7: valve-gamescope-framerate-control-fixups.patch
+Patch6: valve-gamescope-framerate-control-fixups.patch
 # fixes orientation on SuiPlay0X1
-Patch8: suiplay0x1-orientation-quirk.patch
+Patch7: suiplay0x1-orientation-quirk.patch
 
 # temporary patches
 # fixes HAINAN amdgpu card not being bootable
 # https://gitlab.freedesktop.org/drm/amd/-/issues/1839
-Patch9: amdgpu-HAINAN-variant-fixup.patch
+Patch8: amdgpu-HAINAN-variant-fixup.patch
 # Allow to set custom USB pollrate for specific devices like so:
 # usbcore.interrupt_interval_override=045e:00db:16,1bcf:0005:1
 # useful for setting polling rate of wired PS4/PS5 controller to 1000Hz
 # https://github.com/KarsMulder/Linux-Pollrate-Patch
 # https://gitlab.com/GloriousEggroll/nobara-images/-/issues/64
-Patch10: 0001-Allow-to-set-custom-USB-pollrate-for-specific-device.patch
+Patch9: 0001-Allow-to-set-custom-USB-pollrate-for-specific-device.patch
 # Add xpadneo as patch instead of using dkms module
-Patch11: 0001-Add-xpadneo-bluetooth-hid-driver-module.patch
+Patch10: 0001-Add-xpadneo-bluetooth-hid-driver-module.patch
+Patch11: MA350.patch
+
+# Capture device quirks
+Patch12: capture-device-nv12-fixup.patch
+
+# Piece-Of-Cake Fast Idle CPU Selector
+Patch13: https://raw.githubusercontent.com/CachyOS/kernel-patches/refs/heads/master/%{_basekver}/misc/poc-selector.patch
+
+# Add "ROG STRIX X870-I GAMING WIFI"
+Patch14: 0857-hwmon-nct6775-Add-ROG-STRIX-X870-I-GAMING-WIFI.patch
 
 # aarch64 patches
-Patch20: 0001-ampere-arm64-Add-a-fixup-handler-for-alignment-fault.patch
-Patch21: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
-Patch22: xe-nonx86.patch
+Patch21: 0001-arm64-mm-Handle-alignment-faults.patch
+Patch22: 0002-ampere-arm64-Work-around-Ampere-Altra-erratum-82288-.patch
+#Patch23: 0002-arm64-mm-Force-Device-mappings-for-PCIe-MMIO.patch
+Patch23: xe-nonx86.patch
 
 %define __spec_install_post /usr/lib/rpm/brp-compress || :
 %define debug_package %{nil}
@@ -179,6 +193,8 @@ BuildRequires: rust, rust-src, bindgen
 BuildRequires: sparse
 BuildRequires: systemd-boot-unsigned
 BuildRequires: systemd-udev >= 252-1
+# For systemd-repart
+BuildRequires: xfsprogs e2fsprogs dosfstools
 BuildRequires: systemd-ukify
 BuildRequires: tpm2-tools
 BuildRequires: wget
@@ -425,11 +441,16 @@ patch -p1 -i %{PATCH8}
 patch -p1 -i %{PATCH9}
 patch -p1 -i %{PATCH10}
 patch -p1 -i %{PATCH11}
+patch -p1 -i %{PATCH12}
+patch -p1 -i %{PATCH13}
+patch -p1 -i %{PATCH14}
 
 # Apply aarch64 patches
-patch -p1 -i %{PATCH20}
+%ifarch aarch64
 patch -p1 -i %{PATCH21}
 patch -p1 -i %{PATCH22}
+patch -p1 -i %{PATCH23}
+%endif
 
 # Fetch the config and move it to the proper directory
 cp %{SOURCE1} .config
@@ -536,12 +557,12 @@ gcc ./scripts/sign-file.c -o ./scripts/sign-file -lssl -lcrypto
 # perf
 # make sure check-headers.sh is executable
 chmod +x tools/perf/check-headers.sh
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT all
+%{perf_make} DESTDIR=%{buildroot} all
 
 # libperf
 %global libperf_make \
   %{__make} %{?make_opts} EXTRA_CFLAGS="${RPM_OPT_FLAGS}" LDFLAGS="%{__global_ldflags}" %{?cross_opts} -C tools/lib/perf V=1
-%{libperf_make} DESTDIR=$RPM_BUILD_ROOT
+%{libperf_make} DESTDIR=%{buildroot}
 
 %define make %{__make} %{?cross_opts} %{?make_opts} HOSTCFLAGS="%{?build_hostcflags}" HOSTLDFLAGS="%{?build_hostldflags}"
 
@@ -598,14 +619,31 @@ popd
 
 %install
 
-ImageName=$(make image_name | tail -n 1)
+%ifarch aarch64
+# Build + install DTBs into /boot/dtb-%{kverstr}
+mkdir -p %{buildroot}/boot/dtb-%{kverstr}
+make %{?_smp_mflags} %{?llvm_build_env_vars} ARCH=arm64 dtbs
+make %{?_smp_mflags} %{?llvm_build_env_vars} ARCH=arm64 dtbs_install \
+     INSTALL_DTBS_PATH=%{buildroot}/boot/dtb-%{kverstr}
+
+# Also ship DTBs under /lib/modules/%{kverstr}/dtb (same contents, no extra nesting)
+mkdir -p %{buildroot}/lib/modules/%{kverstr}/dtb
+cp -a %{buildroot}/boot/dtb-%{kverstr}/. %{buildroot}/lib/modules/%{kverstr}/dtb/
+%endif
+
+ImageName=$(make KERNELRELEASE=%{kverstr} image_name | tail -n 1)
 
 mkdir -p %{buildroot}/boot
 
 cp -v $ImageName %{buildroot}/boot/vmlinuz-%{kverstr}
 chmod 755 %{buildroot}/boot/vmlinuz-%{kverstr}
 
-ZSTD_CLEVEL=19 make %{?_smp_mflags} %{?llvm_build_env_vars} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_STRIP=1 modules_install mod-fw=
+ZSTD_CLEVEL=19 make %{?_smp_mflags} %{?llvm_build_env_vars} \
+    KERNELRELEASE=%{kverstr} \
+    INSTALL_MOD_PATH=%{buildroot} \
+    INSTALL_MOD_STRIP=1 \
+    modules_install mod-fw=
+
 make %{?_smp_mflags} %{?llvm_build_env_vars} INSTALL_HDR_PATH=%{buildroot}/usr headers_install
 
 # prepare -devel files
@@ -834,7 +872,7 @@ cp -v  %{buildroot}/boot/vmlinuz-%{kverstr} %{buildroot}/lib/modules/%{kverstr}/
 dd if=/dev/zero of=%{buildroot}/boot/initramfs-%{kverstr}.img bs=1M count=48
 
 # perf tool binary and supporting scripts/binaries
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT lib=%{_lib} install-bin
+%{perf_make} DESTDIR=%{buildroot} lib=%{_lib} install-bin
 # remove the 'trace' symlink.
 rm -f %{buildroot}%{_bindir}/trace
 
@@ -847,11 +885,11 @@ rm -rf %{buildroot}/usr/lib/perf/examples
 rm -rf %{buildroot}/usr/lib/perf/include
 
 # python-perf extension
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT install-python_ext
+%{perf_make} DESTDIR=%{buildroot} install-python_ext
 
 # perf man pages (note: implicit rpm magic compresses them later)
 mkdir -p %{buildroot}/%{_mandir}/man1
-%{perf_make} DESTDIR=$RPM_BUILD_ROOT install-man
+%{perf_make} DESTDIR=%{buildroot} install-man
 
 # remove any tracevent files, eg. its plugins still gets built and installed,
 # even if we build against system's libtracevent during perf build (by setting
@@ -865,7 +903,7 @@ rm -rf %{buildroot}%{_libdir}/traceevent
 rm -rf %{buildroot}%{_libdir}/libperf.a
 
 # kernel-tools
-%{make} -C tools/power/cpupower DESTDIR=$RPM_BUILD_ROOT libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false install
+%{make} -C tools/power/cpupower DESTDIR=%{buildroot} libdir=%{_libdir} mandir=%{_mandir} CPUFREQ_BENCH=false install
 %find_lang cpupower
 cp cpupower.lang ../../
 %ifarch x86_64
@@ -987,6 +1025,14 @@ fi
 /lib/modules/%{kverstr}/vmlinuz
 /lib/modules/%{kverstr}/System.map
 /lib/modules/%{kverstr}/symvers.gz
+%ifarch aarch64
+%dir /boot/dtb-%{kverstr}
+%dir /lib/modules/%{kverstr}/dtb
+/boot/dtb-%{kverstr}/*
+/boot/dtb-%{kverstr}/*/*
+/lib/modules/%{kverstr}/dtb/*
+/lib/modules/%{kverstr}/dtb/*/*
+%endif
 
 %files modules
 /lib/modules/%{kverstr}/
@@ -1120,6 +1166,85 @@ fi
 %files
 
 %changelog
+* Fri Mar 13 2026 LionHeartP <LionHeartP@proton.me> - 6.19.8-200
+- Update to 6.19.8
+
+* Thu Mar 12 2026 LionHeartP <LionHeartP@proton.me> - 6.19.7-200
+- Update to 6.19.7
+
+* Thu Mar 05 2026 LionHeartP <LionHeartP@proton.me> - 6.19.6-201
+- Add "ROG STRIX X870-I GAMING WIFI" patch
+
+* Wed Mar 04 2026 LionHeartP <LionHeartP@proton.me> - 6.19.6-200
+- Update to 6.19.6
+
+* Fri Feb 27 2026 LionHeartP <LionHeartP@proton.me> - 6.19.4-200
+- Update to 6.19.4
+
+* Thu Feb 19 2026 LionHeartP <LionHeartP@proton.me> - 6.19.3-200
+- Update to 6.19.3
+
+* Mon Feb 16 2026 LionHeartP <LionHeartP@proton.me> - 6.19.2-200
+- Update to 6.19.2
+
+* Mon Feb 16 2026 LionHeartP <LionHeartP@proton.me> - 6.19.1-200
+- Update to 6.19.1
+- Remove broken aarch86 patch
+- Add poc-selector.patch
+
+* Sat Feb 07 2026 LionHeartP <LionHeartP@proton.me> - 6.18.9-201
+- Only apply aarch86 patches if building for aarch86
+
+* Sat Feb 07 2026 LionHeartP <LionHeartP@proton.me> - 6.18.9-200
+- Update to 6.18.9
+
+* Fri Jan 30 2026 LionHeartP <LionHeartP@proton.me> - 6.18.8-200
+- Update to 6.18.8
+- Add patch for Mercusys MA530 Adapter
+
+* Sat Jan 24 2026 LionHeartP <LionHeartP@proton.me> - 6.18.7-200
+- Update to 6.18.7
+- Remove elgato patch (upstreamed)
+
+* Sun Jan 18 2026 LionHeartP <LionHeartP@proton.me> - 6.18.6-200
+- Update to 6.18.6
+- Add patch for Elgato USB speed
+
+* Mon Jan 12 2026 LionHeartP <LionHeartP@proton.me> - 6.18.5-200
+- Update to 6.18.5
+
+* Fri Jan 09 2026 LionHeartP <LionHeartP@proton.me> - 6.18.4-200
+- Update to 6.18.4
+- Update linux-surface.patch and config
+
+* Sun Jan 04 2026 LionHeartP <LionHeartP@proton.me> - 6.18.3-201
+- Update CachyOS patches
+
+* Fri Jan 02 2026 LionHeartP <LionHeartP@proton.me> - 6.18.3-200
+- Update to 6.18.3
+
+* Thu Dec 18 2025 LionHeartP <LionHeartP@proton.me> - 6.18.2-200
+- Update to 6.18.2
+
+* Sat Dec 13 2025 LionHeartP <LionHeartP@proton.me> - 6.18.1-200
+- Update to 6.18.1
+
+* Fri Dec 12 2025 LionHeartP <LionHeartP@proton.me> - 6.17.12-200
+- Update to 6.17.12
+- Add 0001-amdgpu-Add-CH7218-PCON-to-the-VRR-whitelist.patch
+
+* Sun Dec 07 2025 LionHeartP <LionHeartP@proton.me> - 6.17.11-200
+- Update to 6.17.11
+
+* Mon Dec 01 2025 LionHeartP <LionHeartP@proton.me> - 6.17.10-200
+- Update to 6.17.10
+
+* Mon Nov 24 2025 LionHeartP <LionHeartP@proton.me> - 6.17.9-200
+- Update to 6.17.9
+
+* Fri Nov 14 2025 LionHeartP <LionHeartP@proton.me> - 6.17.8-200
+- Update to 6.17.8
+
 * Sun Nov 02 2025 LionHeartP <LionHeartP@proton.me> - 6.17.7-200
 - Update to 6.17.7
 
