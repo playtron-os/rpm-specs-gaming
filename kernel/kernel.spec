@@ -59,7 +59,7 @@ Version: %{_basekver}.%{_stablekver}
 %if 0%{?_is_rc}
 %define customver 0.%{_rcver}
 %else
-%define customver 200
+%define customver 201
 %endif
 
 Release:%{customver}.nobara%{?dist}
@@ -129,6 +129,10 @@ Patch13: https://raw.githubusercontent.com/CachyOS/kernel-patches/refs/heads/mas
 
 # Add "ROG STRIX X870-I GAMING WIFI"
 Patch14: 0857-hwmon-nct6775-Add-ROG-STRIX-X870-I-GAMING-WIFI.patch
+
+# Add fix for display freezes on AMD iGPUs
+# https://gitlab.freedesktop.org/drm/amd/-/issues/4831#note_3362551
+Patch15: amdgpu-updates-race-condition-fix.patch
 
 # aarch64 patches
 Patch21: 0001-arm64-mm-Handle-alignment-faults.patch
@@ -444,6 +448,7 @@ patch -p1 -i %{PATCH11}
 patch -p1 -i %{PATCH12}
 patch -p1 -i %{PATCH13}
 patch -p1 -i %{PATCH14}
+patch -p1 -i %{PATCH15}
 
 # Apply aarch64 patches
 %ifarch aarch64
@@ -1166,6 +1171,9 @@ fi
 %files
 
 %changelog
+* Mon Mar 16 2026 Luke Short <ekultails@gmail.com> - 6.19.8-201
+- Add LKML patch to fix display freezes on AMD iGPUs
+
 * Fri Mar 13 2026 LionHeartP <LionHeartP@proton.me> - 6.19.8-200
 - Update to 6.19.8
 

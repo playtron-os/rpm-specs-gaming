@@ -1,0 +1,105 @@
+From: <sunpeng.li@amd.com>
+To: <amd-gfx@lists.freedesktop.org>
+Cc: <Harry.Wentland@amd.com>, <superm1@kernel.org>,
+	<sysdadmin@m1k.cloud>, <michel.daenzer@mailbox.org>,
+	Leo Li <sunpeng.li@amd.com>
+Subject: [PATCH] drm/amd/display: Save cursor-only vblank event seperately from pflips
+Date: Thu, 5 Mar 2026 17:21:31 -0500	[thread overview]
+Message-ID: <20260305222131.160914-1-sunpeng.li@amd.com> (raw)
+
+From: Leo Li <sunpeng.li@amd.com>
+
+[Why]
+
+It's suspected that there's a race condition where cursor-only updates
+can race with page-flip updates when updating the amdgpu_crtc->event,
+which is used to track the pending vblank event until it's send by the
+interrupt handler.
+
+Theoretically, DRM should prevent concurrent updates on the same CRTC.
+But evidently, according to findings[1] on a previous attemp to fix
+this, there is a race.
+
+[How]
+
+Save pending vblank events from cursor-only updates seperately in
+amdgpu_crtc->cursor_event. Since cursor updates won't arm the pflip_irq
+to fire, we'll send it in crtc/vupdate_irq handlers.
+
+[1] https://lore.kernel.org/amd-gfx/20260217191632.1243826-1-sysdadmin@m1k.cloud/
+
+Signed-off-by: Leo Li <sunpeng.li@amd.com>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_mode.h       |  1 +
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c  | 18 ++++++++++++++++--
+ .../drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c |  6 +++---
+ 3 files changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_mode.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_mode.h
+index dc8d2f52c7d61..67a3b56b6632b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_mode.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_mode.h
+@@ -506,6 +506,7 @@ struct amdgpu_crtc {
+ 
+ 	int otg_inst;
+ 	struct drm_pending_vblank_event *event;
++	struct drm_pending_vblank_event *cursor_event;
+ 
+ 	bool wb_pending;
+ 	bool wb_enabled;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 50a10b4fbb3ff..b31f64592f7ac 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -9515,6 +9515,21 @@ static void prepare_flip_isr(struct amdgpu_crtc *acrtc)
+ 		      acrtc->crtc_id);
+ }
+ 
++static void prepare_cursor_event(struct amdgpu_crtc *acrtc)
++{
++	assert_spin_locked(&acrtc->base.dev->event_lock);
++	WARN_ON(acrtc->cursor_event);
++
++	acrtc->cursor_event = acrtc->base.state->event;
++
++	/* Mark this event as consumed */
++	acrtc->base.state->event = NULL;
++
++	drm_dbg_state(acrtc->base.dev,
++		      "crtc:%d, cursor event prepared\n",
++		      acrtc->crtc_id);
++}
++
+ static void update_freesync_state_on_stream(
+ 	struct amdgpu_display_manager *dm,
+ 	struct dm_crtc_state *new_crtc_state,
+@@ -10129,8 +10144,7 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ 		spin_lock_irqsave(&pcrtc->dev->event_lock, flags);
+ 		if (acrtc_attach->base.state->event) {
+ 			drm_crtc_vblank_get(pcrtc);
+-			acrtc_attach->event = acrtc_attach->base.state->event;
+-			acrtc_attach->base.state->event = NULL;
++			prepare_cursor_event(acrtc_attach);
+ 		}
+ 		spin_unlock_irqrestore(&pcrtc->dev->event_lock, flags);
+ 	}
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c
+index 2e7ee77c010e1..567f9dc0ef300 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_crtc.c
+@@ -49,10 +49,10 @@ void amdgpu_dm_crtc_handle_vblank(struct amdgpu_crtc *acrtc)
+ 	spin_lock_irqsave(&dev->event_lock, flags);
+ 
+ 	/* Send completion event for cursor-only commits */
+-	if (acrtc->event && acrtc->pflip_status != AMDGPU_FLIP_SUBMITTED) {
+-		drm_crtc_send_vblank_event(crtc, acrtc->event);
++	if (acrtc->cursor_event) {
++		drm_crtc_send_vblank_event(crtc, acrtc->cursor_event);
+ 		drm_crtc_vblank_put(crtc);
+-		acrtc->event = NULL;
++		acrtc->cursor_event = NULL;
+ 	}
+ 
+ 	spin_unlock_irqrestore(&dev->event_lock, flags);
+-- 
+2.52.0
