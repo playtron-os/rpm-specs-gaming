@@ -1,0 +1,22 @@
+diff --git a/public/fpdfview.h b/public/fpdfview.h
+index 4910eac66..a1f2a08ae 100644
+--- a/public/fpdfview.h
++++ b/public/fpdfview.h
+@@ -203,7 +203,7 @@ typedef int FPDF_ANNOT_APPEARANCEMODE;
+ // Dictionary value types.
+ typedef int FPDF_OBJECT_TYPE;
+ 
+-#if defined(COMPONENT_BUILD)
++#if defined(COMPONENT_BUILD) || defined(FPDF_IMPLEMENTATION)
+ // FPDF_EXPORT should be consistent with |export| in the pdfium_fuzzer
+ // template in testing/fuzzers/BUILD.gn.
+ #if defined(WIN32)
+@@ -221,7 +221,7 @@ typedef int FPDF_OBJECT_TYPE;
+ #endif  // defined(WIN32)
+ #else
+ #define FPDF_EXPORT
+-#endif  // defined(COMPONENT_BUILD)
++#endif  // defined(COMPONENT_BUILD) || defined(FPDF_IMPLEMENTATION)
+ 
+ #if defined(WIN32) && defined(FPDFSDK_EXPORTS)
+ #define FPDF_CALLCONV __stdcall

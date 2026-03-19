@@ -8,6 +8,8 @@ Summary:        Open-source PDF rendering library from the Chromium project
 License:        BSD-3-Clause
 URL:            https://pdfium.googlesource.com/pdfium/
 
+Patch0: add-fpdf-implementation-to-export-guard.patch
+
 # depot_tools provides gclient
 BuildRequires:  git
 BuildRequires:  python3
@@ -51,18 +53,20 @@ gclient sync -r "origin/chromium/%{pdfium_version}" --no-history --shallow -D
 
 cd pdfium
 
+%patch 0 -p1
+
 # Configure GN args (Release build, minimal features for smaller lib)
 mkdir -p out/Release
 cat > out/Release/args.gn <<ARGS
+use_remoteexec = false
 is_debug = false
-is_component_build = true
-use_sysroot = false
-use_lld = false
+is_component_build = false
 clang_use_chrome_plugins = false
 pdf_enable_v8 = false
 pdf_enable_xfa = false
-pdf_use_skia = true
-pdf_is_standalone = false
+pdf_is_standalone = true
+pdf_is_complete_lib = true
+use_custom_libcxx = false
 ARGS
 
 
@@ -75,22 +79,20 @@ cd %{_builddir}/pdfium_repo/pdfium
 gn gen out/Release
 ninja -C out/Release pdfium
 
+# Create .so file
+cd out/Release
+../../third_party/llvm-build/Release+Asserts/bin/clang++ \
+  -shared -fuse-ld=lld \
+  -o libpdfium.so \
+  -Wl,--whole-archive obj/libpdfium.a -Wl,--no-whole-archive \
+  -lm -lpthread -ldl
+
 
 %install
 cd %{_builddir}/pdfium_repo/pdfium
 
 # Install library
 install -Dpm 755 out/Release/libpdfium.so "%{buildroot}%{_libdir}/libpdfium.so"
-install -Dpm 755 out/Release/libchrome_zlib.so "%{buildroot}%{_libdir}/libchrome_zlib.so"
-install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_allocator_base.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_base.so"
-install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_allocator_core.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_core.so"
-install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so"
-install -Dpm 755 out/Release/libbase_allocator_partition_allocator_src_partition_alloc_raw_ptr.so "%{buildroot}%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_raw_ptr.so"
-install -Dpm 755 out/Release/libskia.so "%{buildroot}%{_libdir}/libskia.so"
-install -Dpm 755 out/Release/libthird_party_abseil-cpp_absl.so "%{buildroot}%{_libdir}/libthird_party_abseil-cpp_absl.so"
-install -Dpm 755 out/Release/libthird_party_harfbuzz-ng.so "%{buildroot}%{_libdir}/libthird_party_harfbuzz-ng.so"
-install -Dpm 755 out/Release/libc++.so "%{buildroot}%{_libdir}/libc++.so"
-install -Dpm 755 out/Release/libicuuc.so "%{buildroot}%{_libdir}/libicuuc.so"
 
 # Install headers
 install -d %{buildroot}%{_includedir}/pdfium
@@ -114,16 +116,6 @@ EOF
 
 %files
 %{_libdir}/libpdfium.so
-%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_base.so
-%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_core.so
-%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so
-%{_libdir}/libbase_allocator_partition_allocator_src_partition_alloc_raw_ptr.so
-%{_libdir}/libchrome_zlib.so
-%{_libdir}/libskia.so
-%{_libdir}/libthird_party_abseil-cpp_absl.so
-%{_libdir}/libthird_party_harfbuzz-ng.so
-%{_libdir}/libc++.so
-%{_libdir}/libicuuc.so
 %{_libdir}/pkgconfig/pdfium.pc
 %{_includedir}/pdfium/
 
