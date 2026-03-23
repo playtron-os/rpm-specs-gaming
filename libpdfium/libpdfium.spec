@@ -20,12 +20,7 @@ BuildRequires:  gn
 BuildRequires:  ninja-build
 BuildRequires:  fontconfig-devel
 BuildRequires:  pkgconfig(glib-2.0)
-BuildRequires:  pkgconfig(nspr)
-BuildRequires:  pkgconfig(nss)
 BuildRequires:  xz
-
-Requires:       pkgconfig(nspr)
-Requires:       pkgconfig(nss)
 
 ExclusiveArch:  x86_64 aarch64
 
