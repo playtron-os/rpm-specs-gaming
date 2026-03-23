@@ -116,8 +116,21 @@ EOF
 
 %files
 %{_libdir}/libpdfium.so
+
+
+%package devel
+Summary:        Development files for PDFium
+Requires:       %{name} = %{version}-%{release}
+
+%description devel
+Header files for developing applications that use PDFium.
+
+%files devel
 %{_libdir}/pkgconfig/pdfium.pc
 %{_includedir}/pdfium/
+
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 
 %changelog
