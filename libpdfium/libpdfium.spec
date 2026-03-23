@@ -129,5 +129,5 @@ Header files for developing applications that use PDFium.
 
 
 %changelog
-* Fri Mar 13 2026 Alesh Slovak <alesh@playtron.one> 7733-1
+* Mon Mar 23 2026 Alesh Slovak <alesh@playtron.one> 7733-1
 - Initial RPM spec created
