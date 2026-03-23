@@ -1,5 +1,7 @@
 ---
 name: Test libpdfium
+permissions:
+  contents: read
 on:
   push:
     branches-ignore:

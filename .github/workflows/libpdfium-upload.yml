@@ -1,5 +1,7 @@
 ---
 name: Upload libpdfium source RPM
+permissions:
+  contents: read
 on:
   push:
     branches:
