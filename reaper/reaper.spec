@@ -1,6 +1,6 @@
 Name: reaper
 Version: 0.1.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A command to monitor and annotate a process tree
 License: MIT
 URL: https://github.com/playtron-os/reaper
@@ -21,17 +21,20 @@ cd reaper-%{version}
 make
 
 %install
-mkdir -p %{buildroot}/usr/bin
-cp reaper-%{version}/build/reaper %{buildroot}/usr/bin/
+mkdir -p %{buildroot}/usr/libexec/playtron
+cp reaper-%{version}/build/reaper %{buildroot}/usr/libexec/playtron/
 
 mkdir -p %{buildroot}/usr/share/licenses/reaper/
 cp reaper-%{version}/LICENSE %{buildroot}/usr/share/licenses/reaper/
 
 %files
-/usr/bin/reaper
+/usr/libexec/playtron/reaper
 /usr/share/licenses/reaper/LICENSE
 
 %changelog
+* Fri Mar 27 2026 Alesh Slovak <aleshslovak@gmail.com> 0.1.0-3
+- Relocate reaper binary to avoid conflict and adhere to standards
+
 * Fri Sep 20 2024 Luke Short <ekultails@gmail.com> 0.1.0-2
 - Disable debug package to fix builds on Fedora 41
 
