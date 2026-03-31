@@ -1,5 +1,5 @@
 Name: gamescope-session-playtron
-Version: 0.4.1
+Version: 0.5.0
 Release: 1%{?dist}
 Summary: Playtron Session for PlaytronOS
 License: MIT
@@ -25,11 +25,11 @@ cp -Rv %{name}-%{version}/usr/ %{buildroot}/
 %files
 /usr/share/gamescope-session-plus/sessions.d/playtron
 /usr/share/wayland-sessions/gamescope-session-playtron.desktop
-/usr/bin/jupiter-dock-updater
-/usr/bin/jupiter-biosupdate
-/usr/bin/steamos-update
 
 %changelog
+* Tue Mar 31 2026 Luke Short <ekultails@gmail.com> 0.5.0-1
+- Update version
+
 * Wed Aug 13 2025 Alesh Slovak <aleshslovak@gmail.com> 0.4.1-1
 - Update version
 
