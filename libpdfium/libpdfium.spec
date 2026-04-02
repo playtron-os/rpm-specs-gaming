@@ -66,6 +66,10 @@ is_component_build = false
 clang_use_chrome_plugins = false
 ARGS
 
+%ifarch aarch64
+export TARGET_CPU=arm64
+echo 'target_cpu = "arm64"' >> out/Release/args.gn
+%endif
 
 %build
 # Help linker find libgcc_s
@@ -73,6 +77,11 @@ export LIBRARY_PATH="$(dirname $(gcc -print-file-name=libgcc_s.so)):${LIBRARY_PA
 
 # Generate Ninja build files and build the library
 cd %{_builddir}/pdfium_repo/pdfium
+
+%ifarch aarch64
+./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
+%endif
+
 gn gen out/Release
 ninja -C out/Release pdfium
 
