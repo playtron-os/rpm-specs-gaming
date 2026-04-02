@@ -2,7 +2,7 @@
 
 Name:           libpdfium
 Version:        %{pdfium_version}
-Release:        1
+Release:        2
 Summary:        Open-source PDF rendering library from the Chromium project
 
 License:        BSD-3-Clause
@@ -132,5 +132,9 @@ Header files for developing applications that use PDFium.
 
 
 %changelog
+* Thu Apr 2 2026 Alesh Slovak <alesh@playtron.one> 7733-2
+- Add support for cross compiling libpdfium for arm64
+- Simplify build and align with pdfium binaries project
+
 * Mon Mar 23 2026 Alesh Slovak <alesh@playtron.one> 7733-1
 - Initial RPM spec created
