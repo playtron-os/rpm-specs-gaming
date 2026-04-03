@@ -78,7 +78,7 @@
 
 Name:           mesa
 Summary:        Mesa graphics libraries
-Version:        26.0.2
+Version:        26.0.4
 Release:        %autorelease
 License:        MIT AND BSD-3-Clause AND SGI-B-2.0
 URL:            https://mesa3d.org
@@ -114,9 +114,6 @@ Source15:       https://crates.io/api/v1/crates/rustc-hash/%{rustc_hash_ver}/dow
 # Backport of https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/39951
 # which fixes compile-time conditional on AVX2 which is not built on Fedora
 Patch21:        39951.patch
-
-# Fix artifacting on newer Qualcomm GPUs.
-Patch22:	40333-freedreno-4k-alignment.patch
 
 BuildRequires:  meson >= 1.3.0
 BuildRequires:  gcc
