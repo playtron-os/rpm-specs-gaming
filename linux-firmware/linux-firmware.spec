@@ -3,15 +3,17 @@
 %global _firmwarepath	/usr/lib/firmware
 %define _binaries_in_noarch_packages_terminate_build 0
 
+
 Name:		linux-firmware
-Version:	20260309
+Version:	20260402
+%define hash 583d336ee7c2a15fd9e92c223b147d30737ec04f
 Release:	1%{?dist}
 Summary:	Firmware files used by the Linux kernel
 License:	GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-Callaway-Redistributable-no-modification-permitted
 URL:		http://www.kernel.org/
 BuildArch:	noarch
 
-Source0:	https://www.kernel.org/pub/linux/kernel/firmware/%{name}-%{version}.tar.xz
+Source0:	https://gitlab.com/kernel-firmware/linux-firmware/-/archive/583d336ee7c2a15fd9e92c223b147d30737ec04f/linux-firmware-%{hash}.tar.gz
 
 BuildRequires:	make
 BuildRequires:	git-core
@@ -280,7 +282,7 @@ cx23885, cx23840, cx231xx), Xceive xc4000/xc5000, DiBcom dib0700,
 Terratec H5 DRX-K, ITEtech IT9135 Ax and Bx, and av7110.
 
 %prep
-%autosetup -S git -p1
+%autosetup -S git -p1 -n linux-firmware-%{hash}
 
 %build
 
@@ -724,6 +726,9 @@ end
 %{_firmwarepath}/v4l-cx2*
 
 %changelog
+* Fri Apr 03 2026 Luke Short <ekultails@gmail.com> - 20260402-1
+- Update to 20260402
+
 * Tue Mar 10 2026 Peter Robinson <pbrobinson@fedoraproject.org> - 20260309-1
 - Update to 20260309
 - mediatek MT7922: update bluetooth firmware to 20260224103448
