@@ -1,10 +1,12 @@
 %global libliftoff_minver 0.5.0
 %global reshade_commit 696b14cd6006ae9ca174e6164450619ace043283
 %global reshade_shortcommit %(c=%{reshade_commit}; echo ${c:0:7})
+%global vkroots_commit 5106d8a0df95de66cc58dc1ea37e69c99afc9540
+%global vkroots_shortcommit %(c=%{vkroots_commit}; echo ${c:0:7})
 
 Name:           gamescope
-Version:        3.16.19
-Release:        2
+Version:        3.16.20
+Release:        %autorelease
 Summary:        Micro-compositor for video games on Wayland
 # Automatically converted from old format: BSD - review is highly recommended.
 License:        LicenseRef-Callaway-BSD
@@ -16,7 +18,8 @@ ExcludeArch:    ppc64le
 Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 # Create stb.pc to satisfy dependency('stb')
 Source1:        stb.pc
-Source2:        https://github.com/Joshua-Ashton/reshade/archive/%{reshade_commit}/reshade-%{reshade_shortcommit}.tar.gz
+Source2:        https://github.com/misyltoad/reshade/archive/%{reshade_commit}/reshade-%{reshade_shortcommit}.tar.gz
+Source3:        https://github.com/misyltoad/vkroots/archive/%{vkroots_commit}/vkroots-%{vkroots_shortcommit}.tar.gz
 
 # https://github.com/misyltoad/reshade/pull/1:
 Patch:          0001-cstdint.patch
@@ -25,9 +28,6 @@ Patch:          0001-cstdint.patch
 # We'll hold on rebases of gamescope if tags diverge in the future
 Patch:          Allow-to-use-system-wlroots.patch
 Patch:          Use-system-stb-glm.patch
-
-
-Patch:          fix-null-dereference.patch
 
 BuildRequires:  cmake
 BuildRequires:  gcc
@@ -79,8 +79,9 @@ BuildRequires:  stb_image_resize-devel
 BuildRequires:  stb_image_resize-static
 BuildRequires:  stb_image_write-devel
 BuildRequires:  stb_image_write-static
-BuildRequires:  vkroots-devel
 BuildRequires:  /usr/bin/glslangValidator
+
+Provides:       bundled(vkroots) = 0^20240429git5106d8a
 
 # libliftoff hasn't bumped soname, but API/ABI has changed for 0.2.0 release
 Requires:       libliftoff%{?_isa} >= %{libliftoff_minver}
@@ -100,8 +101,9 @@ cp %{SOURCE1} pkgconfig/stb.pc
 # Replace spirv-headers include with the system directory
 sed -i 's^../thirdparty/SPIRV-Headers/include/spirv/^/usr/include/spirv/^' src/meson.build
 
-# Push in reshade from sources instead of submodule
+# Push in reshade and vkroots from sources instead of submodule
 tar -xzf %{SOURCE2} --strip-components=1 -C src/reshade
+tar -xzf %{SOURCE3} --strip-components=1 -C subprojects/vkroots
 
 %autopatch -p1
 
@@ -114,7 +116,7 @@ export PKG_CONFIG_PATH=pkgconfig
     -Denable_gamescope=true \
     -Denable_gamescope_wsi_layer=true \
     -Denable_openvr_support=false \
-    -Dforce_fallback_for=[] \
+    -Dforce_fallback_for=vkroots \
     -Dinput_emulation=enabled \
     -Dpipewire=enabled \
     -Drt_cap=enabled \
@@ -122,7 +124,7 @@ export PKG_CONFIG_PATH=pkgconfig
 %meson_build
 
 %install
-%meson_install
+%meson_install --skip-subprojects
 
 %files
 %license LICENSE
@@ -131,6 +133,7 @@ export PKG_CONFIG_PATH=pkgconfig
 %{_bindir}/gamescopectl
 %{_bindir}/gamescopereaper
 %{_bindir}/gamescopestream
+%{_bindir}/gamescope-type
 %{_datadir}/gamescope
 %{_libdir}/libVkLayer_FROG_gamescope_wsi_*.so
 %{_datadir}/vulkan/implicit_layer.d/VkLayer_FROG_gamescope_wsi.*.json
