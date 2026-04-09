@@ -5,15 +5,15 @@
 
 
 Name:		linux-firmware
-Version:	20260402
-%define hash 583d336ee7c2a15fd9e92c223b147d30737ec04f
+Version:	20260408
+%define hash e9cae76da75816f1e5643502bd15e1e98d19cbfc
 Release:	1%{?dist}
 Summary:	Firmware files used by the Linux kernel
 License:	GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-Callaway-Redistributable-no-modification-permitted
 URL:		http://www.kernel.org/
 BuildArch:	noarch
 
-Source0:	https://gitlab.com/kernel-firmware/linux-firmware/-/archive/583d336ee7c2a15fd9e92c223b147d30737ec04f/linux-firmware-%{hash}.tar.gz
+Source0:	https://gitlab.com/kernel-firmware/linux-firmware/-/archive/%{hash}/linux-firmware-%{hash}.tar.gz
 
 BuildRequires:	make
 BuildRequires:	git-core
@@ -667,6 +667,7 @@ end
 %dir %{_firmwarepath}/qcom
 %{_firmwarepath}/qcom/glymur/
 %{_firmwarepath}/qcom/kaanapali/
+%{_firmwarepath}/qcom/shikra/
 %{_firmwarepath}/a300_p*
 %{_firmwarepath}/qcom/*.fw*
 %{_firmwarepath}/qcom/*.bin*
@@ -726,6 +727,9 @@ end
 %{_firmwarepath}/v4l-cx2*
 
 %changelog
+* Thu Apr 09 2026 Luke Short <ekultails@gmail.com 20260408-1
+- Update to 20260408
+
 * Fri Apr 03 2026 Luke Short <ekultails@gmail.com> - 20260402-1
 - Update to 20260402
 
