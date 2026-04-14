@@ -1,6 +1,6 @@
 Name:           legendary
 Version:        0.20.45
-Release:        1.playtron
+Release:        2.playtron
 Summary:        Free and open-source replacement for the Epic Games Launcher
 BuildArch:      noarch
 
@@ -11,6 +11,9 @@ Source0:        %{url}/archive/%{version}/%{name}-%{version}.tar.gz
 BuildRequires:  python3-devel >= 3.9
 BuildRequires:  python3-setuptools
 BuildRequires:  python3dist(requests)
+
+# required by rpmbuild on Arm
+BuildRequires:  libgomp
 
 Requires:       python3-requests
 
@@ -54,6 +57,9 @@ done
 
 
 %changelog
+* Tue Apr 14 2026 Alesh Slovak <aleshslovak@gmail.com> 0.20.45-2.playtron
+- Fix for Arm build
+
 * Tue Apr 14 2026 Alesh Slovak <aleshslovak@gmail.com> 0.20.45-1.playtron
 - Update version
 
