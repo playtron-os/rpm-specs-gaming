@@ -68,6 +68,11 @@ libpdfium: ## Build libpdfium RPM
 	$(MAKE) build TARGET_DIR=libpdfium
 
 
+.PHONY: libpdfium-arm
+libpdfium-arm: ## Build libpdfium RPM (Arm)
+	$(MAKE) build TARGET_DIR=libpdfium ARCH=aarch64
+
+
 .PHONY: mangohud
 mangohud: ## Build mangohud RPM
 	$(MAKE) build TARGET_DIR=mangohud
@@ -119,7 +124,7 @@ build: $(SOURCES_DIR) check-target-set
 	@echo "Installing the required build dependencies."
 	sudo dnf builddep -y ./$(TARGET_DIR)/*.spec
 	@echo "Building the binary RPM"
-	rpmbuild -bb ./$(TARGET_DIR)/*.spec
+	rpmbuild -bb --target=$(ARCH) ./$(TARGET_DIR)/*.spec
 	mkdir -p ./dist
 	PKG_NAME=$$(grep '^Name:' ./$(TARGET_DIR)/*.spec | cut -d' ' -f2) \
 		cp -r ~/rpmbuild/RPMS/$(ARCH)/$${PKG_NAME}*.rpm ./dist
