@@ -2,13 +2,14 @@
 
 Name:           libpdfium
 Version:        %{pdfium_version}
-Release:        1
+Release:        2
 Summary:        Open-source PDF rendering library from the Chromium project
 
 License:        BSD-3-Clause
 URL:            https://pdfium.googlesource.com/pdfium/
 
-Patch0: add-fpdf-implementation-to-export-guard.patch
+Patch0: public_headers.patch
+Patch1: shared_library.patch
 
 # depot_tools provides gclient
 BuildRequires:  git
@@ -49,21 +50,26 @@ gclient sync -r "origin/chromium/%{pdfium_version}" --no-history --shallow -D
 cd pdfium
 
 %patch 0 -p1
+%patch 1 -p1
 
 # Configure GN args (Release build, minimal features for smaller lib)
 mkdir -p out/Release
 cat > out/Release/args.gn <<ARGS
-use_remoteexec = false
 is_debug = false
-is_component_build = false
-clang_use_chrome_plugins = false
+pdf_is_standalone = true
+pdf_use_partition_alloc = false
+target_os = "linux"
 pdf_enable_v8 = false
 pdf_enable_xfa = false
-pdf_is_standalone = true
-pdf_is_complete_lib = true
-use_custom_libcxx = false
+treat_warnings_as_errors = false
+is_component_build = false
+clang_use_chrome_plugins = false
 ARGS
 
+%ifarch aarch64
+export TARGET_CPU=arm64
+echo 'target_cpu = "arm64"' >> out/Release/args.gn
+%endif
 
 %build
 # Help linker find libgcc_s
@@ -71,16 +77,13 @@ export LIBRARY_PATH="$(dirname $(gcc -print-file-name=libgcc_s.so)):${LIBRARY_PA
 
 # Generate Ninja build files and build the library
 cd %{_builddir}/pdfium_repo/pdfium
+
+%ifarch aarch64
+./build/linux/sysroot_scripts/install-sysroot.py --arch=arm64
+%endif
+
 gn gen out/Release
 ninja -C out/Release pdfium
-
-# Create .so file
-cd out/Release
-../../third_party/llvm-build/Release+Asserts/bin/clang++ \
-  -shared -fuse-ld=lld \
-  -o libpdfium.so \
-  -Wl,--whole-archive obj/libpdfium.a -Wl,--no-whole-archive \
-  -lm -lpthread -ldl
 
 
 %install
@@ -129,5 +132,9 @@ Header files for developing applications that use PDFium.
 
 
 %changelog
+* Thu Apr 2 2026 Alesh Slovak <alesh@playtron.one> 7733-2
+- Add support for cross compiling libpdfium for arm64
+- Simplify build and align with pdfium binaries project
+
 * Mon Mar 23 2026 Alesh Slovak <alesh@playtron.one> 7733-1
 - Initial RPM spec created
