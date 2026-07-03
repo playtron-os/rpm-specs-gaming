@@ -5,8 +5,8 @@
 
 
 Name:		linux-firmware
-Version:	20260408
-%define hash e9cae76da75816f1e5643502bd15e1e98d19cbfc
+Version:	20260701
+%define hash 1de7df24840578efde8ea6b34d2d6809ea1b8575
 Release:	1%{?dist}
 Summary:	Firmware files used by the Linux kernel
 License:	GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-Callaway-Redistributable-no-modification-permitted
@@ -366,7 +366,6 @@ sed \
 	-i -e '/^nvidia\/a/d' \
 	-i -e '/^nvidia\/g/d' \
 	-i -e '/^nvidia\/tu/d' \
-	-i -e '/^lgs8g75/d' \
 	-i -e '/^libertas/d' \
 	-i -e '/^liquidio/d' \
 	-i -e '/^mellanox/d' \
@@ -450,25 +449,27 @@ end
 
 
 %files -f linux-firmware.files
+%license LICENSES/*
 %dir %{_firmwarepath}
-%license LICENCE.* LICENSE.* GPL*
 
 %files whence
-%license WHENCE
+%license LICENSE WHENCE
 
 # GPU firmwares
 %files -n amd-gpu-firmware
-%license LICENSE.radeon LICENSE.amdgpu LICENSE.amdnpu
+%license LICENSES/LICENSE.radeon LICENSES/LICENSE.amdgpu LICENSES/LICENSE.amdnpu
 %{_firmwarepath}/amdgpu/
 %{_firmwarepath}/amdnpu/
 %{_firmwarepath}/radeon/
 
 %files -n intel-gpu-firmware
-%license LICENSE.i915
+%license LICENSES/LICENSE.i915
+%license LICENSES/LICENSE.xe
 %{_firmwarepath}/i915/
+%{_firmwarepath}/xe/
 
 %files -n nvidia-gpu-firmware
-%license LICENCE.nvidia
+%license LICENSES/LICENCE.nvidia
 %dir %{_firmwarepath}/nvidia/
 %{_firmwarepath}/nvidia/a*
 %{_firmwarepath}/nvidia/g*
@@ -476,18 +477,18 @@ end
 
 # Microcode updates
 %files -n amd-ucode-firmware
-%license LICENSE.amd-ucode
+%license LICENSES/LICENSE.amd-ucode
 %{_firmwarepath}/amd/
 %{_firmwarepath}/amdtee/
 %{_firmwarepath}/amd-ucode/
 
 # WiFi/Bluetooth firmwares
 %files -n atheros-firmware
-%license LICENCE.atheros_firmware
-%license LICENSE.QualcommAtheros_ar3k
-%license LICENSE.QualcommAtheros_ath10k
-%license LICENCE.open-ath9k-htc-firmware
-%license qca/NOTICE.txt
+%license LICENSES/LICENCE.atheros_firmware
+%license LICENSES/LICENSE.QualcommAtheros_ar3k
+%license LICENSES/LICENSE.QualcommAtheros_ath10k
+%license LICENSES/LICENCE.open-ath9k-htc-firmware
+%license LICENSES/NOTICE.qca
 %{_firmwarepath}/ar3k/
 %{_firmwarepath}/ath6k/
 %{_firmwarepath}/ath9k_htc/
@@ -497,20 +498,20 @@ end
 %{_firmwarepath}/qca/
 
 %files -n brcmfmac-firmware
-%license LICENCE.broadcom_bcm43xx
-%license LICENCE.cypress
+%license LICENSES/LICENCE.broadcom_bcm43xx
+%license LICENSES/LICENCE.cypress
 %{_firmwarepath}/brcm/
 %{_firmwarepath}/cypress/
 
 %files -n iwlegacy-firmware
-%license LICENCE.iwlwifi_firmware
+%license LICENSES/LICENCE.iwlwifi_firmware
 %{_firmwarepath}/iwlwifi-3945-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-3945-*.ucode*
 %{_firmwarepath}/iwlwifi-4965-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-4965-*.ucode*
 
 %files -n iwlwifi-dvm-firmware
-%license LICENCE.iwlwifi_firmware
+%license LICENSES/LICENCE.iwlwifi_firmware
 %{_firmwarepath}/iwlwifi-1??-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-1??-*.ucode*
 %{_firmwarepath}/iwlwifi-1000-*.ucode*
@@ -525,7 +526,7 @@ end
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-6000g2?-*.ucode*
 
 %files -n iwlwifi-mvm-firmware
-%license LICENCE.iwlwifi_firmware
+%license LICENSES/LICENCE.iwlwifi_firmware
 %{_firmwarepath}/iwlwifi-316?-*.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-316?-*.ucode*
 %{_firmwarepath}/iwlwifi-726?-*.ucode*
@@ -562,7 +563,7 @@ end
 %exclude %{_firmwarepath}/intel/iwlwifi/iwlwifi-gl-c0*1??.ucode*
 
 %files -n iwlwifi-mld-firmware
-%license LICENCE.iwlwifi_firmware
+%license LICENSES/LICENCE.iwlwifi_firmware
 %{_firmwarepath}/iwlwifi-bz-b0*9[7-9].ucode*
 %{_firmwarepath}/iwlwifi-bz-b0*1??.ucode*
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-bz-b0*9[7-9].ucode*
@@ -575,54 +576,55 @@ end
 %{_firmwarepath}/intel/iwlwifi/iwlwifi-sc-a0-*1??.ucode*
 
 %files -n libertas-firmware
-%license LICENCE.Marvell LICENCE.OLPC
+%license LICENSES/LICENCE.Marvell LICENSES/LICENCE.OLPC
 %dir %{_firmwarepath}/libertas
 %dir %{_firmwarepath}/mrvl
 %{_firmwarepath}/libertas/*
 %{_firmwarepath}/mrvl/sd8787*
 
 %files -n mt7xxx-firmware
-%license LICENCE.mediatek
-%license LICENCE.ralink_a_mediatek_company_firmware
+%license LICENSES/LICENCE.mediatek
+%license LICENSES/LICENCE.ralink_a_mediatek_company_firmware
 %dir %{_firmwarepath}/mediatek
 %{_firmwarepath}/mediatek/mt76*
 %{_firmwarepath}/mediatek/mt791*
 %{_firmwarepath}/mediatek/mt7925/
+%{_firmwarepath}/mediatek/mt7927/
 %{_firmwarepath}/mediatek/mt7996/
 %{_firmwarepath}/mediatek/BT*
 %{_firmwarepath}/mediatek/WIFI*
 %{_firmwarepath}/mt76*
 
 %files -n nxpwireless-firmware
-%license LICENSE.nxp
+%license LICENSES/LICENSE.nxp
 %dir %{_firmwarepath}/nxp
 %{_firmwarepath}/nxp/*
 
 %files -n qcom-wwan-firmware
-%license LICENSE.qcom qcom/NOTICE.txt
+%license LICENSES/LICENSE.qcom LICENSES/NOTICE.qcom
 %dir %{_firmwarepath}/qcom
 %{_firmwarepath}/qcom/sdx*/
 
 %files -n realtek-firmware
-%license LICENCE.rtlwifi_firmware.txt
+%license LICENSES/LICENCE.rtlwifi_firmware.txt
 %{_firmwarepath}/rtl_bt/
 %{_firmwarepath}/rtlwifi/
 %{_firmwarepath}/rtw88/
 %{_firmwarepath}/rtw89/
 
 %files -n tiwilink-firmware
-%license LICENCE.ti-connectivity
+%license LICENSES/LICENCE.ti-connectivity
 %dir %{_firmwarepath}/ti-connectivity/
 %{_firmwarepath}/ti-connectivity/*
 
 # SMART NIC and network switch firmwares
 %files -n liquidio-firmware
-%license LICENCE.cavium_liquidio
+%license LICENSES/LICENCE.cavium_liquidio
 %dir %{_firmwarepath}/liquidio
 %{_firmwarepath}/liquidio/*
 
 %files -n mrvlprestera-firmware
-%license LICENCE.Marvell
+%license LICENSES/LICENCE.Marvell
 %dir %{_firmwarepath}/mrvl/prestera
 %{_firmwarepath}/mrvl/prestera/*
 
@@ -631,11 +633,12 @@ end
 %{_firmwarepath}/mellanox/*
 
 %files -n netronome-firmware
-%license LICENCE.Netronome
+%license LICENSES/LICENCE.Netronome
 %dir %{_firmwarepath}/netronome
 %{_firmwarepath}/netronome/*
 
 %files -n qcom-accel-firmware
+%license LICENSES/LICENSE.qcom LICENSES/NOTICE.qcom
 %dir %{_firmwarepath}/qcom
 %dir %{_firmwarepath}/qcom/aic100
 %dir %{_firmwarepath}/qcom/qdu100
@@ -648,7 +651,7 @@ end
 
 # Silicon Vendor specific
 %files -n mediatek-firmware
-%license LICENCE.mediatek
+%license LICENSES/LICENCE.mediatek
 %dir %{_firmwarepath}/mediatek
 %{_firmwarepath}/mediatek/mt798?*
 %{_firmwarepath}/mediatek/mt8173/
@@ -663,11 +666,10 @@ end
 %{_firmwarepath}/mediatek/sof-tplg/
 
 %files -n qcom-firmware
-%license LICENSE.qcom LICENSE.qcom_yamato qcom/NOTICE.txt
+%license LICENSES/LICENSE.qcom LICENSES/LICENSE.qcom_yamato LICENSES/NOTICE.qcom
 %dir %{_firmwarepath}/qcom
 %{_firmwarepath}/qcom/glymur/
 %{_firmwarepath}/qcom/kaanapali/
-%{_firmwarepath}/qcom/shikra/
 %{_firmwarepath}/a300_p*
 %{_firmwarepath}/qcom/*.fw*
 %{_firmwarepath}/qcom/*.bin*
@@ -677,6 +679,7 @@ end
 %{_firmwarepath}/qcom/qcs*/
 %{_firmwarepath}/qcom/qrb*/
 %{_firmwarepath}/qcom/sa*/
+%{_firmwarepath}/qcom/shikra/
 %{_firmwarepath}/qcom/sc*/
 %{_firmwarepath}/qcom/sdm*/
 %{_firmwarepath}/qcom/sm*/
@@ -686,7 +689,7 @@ end
 
 # Vision and ISP hardware
 %files -n intel-vsc-firmware
-%license LICENSE.ivsc
+%license LICENSES/LICENSE.ivsc
 %dir %{_firmwarepath}/intel/ipu/
 %dir %{_firmwarepath}/intel/vsc/
 %{_firmwarepath}/intel/ipu3-fw.bin*
@@ -696,12 +699,12 @@ end
 
 # Sound codec hardware
 %files -n cirrus-audio-firmware
-%license LICENSE.cirrus
+%license LICENSES/LICENSE.cirrus
 %dir %{_firmwarepath}/cirrus
 %{_firmwarepath}/cirrus/*
 
 %files -n intel-audio-firmware
-%license LICENCE.adsp_sst LICENCE.IntcSST2
+%license LICENSES/LICENCE.adsp_sst LICENSES/LICENCE.IntcSST2
 %dir %{_firmwarepath}/intel/
 %dir %{_firmwarepath}/intel/avs/
 %dir %{_firmwarepath}/intel/catpt/
@@ -713,20 +716,22 @@ end
 
 # Random other hardware
 %files -n dvb-firmware
-%license LICENSE.dib0700 LICENCE.it913x LICENCE.siano
-%license LICENCE.xc4000 LICENCE.xc5000 LICENCE.xc5000c
+%license LICENSES/LICENSE.dib0700 LICENSES/LICENCE.it913x LICENSES/LICENCE.siano
+%license LICENSES/LICENCE.xc4000 LICENSES/LICENCE.xc5000 LICENSES/LICENCE.xc5000c
 %dir %{_firmwarepath}/av7110/
 %{_firmwarepath}/av7110/*
 %{_firmwarepath}/as102_data*
 %{_firmwarepath}/cmmb*
 %{_firmwarepath}/dvb*
 %{_firmwarepath}/isdbt*
-%{_firmwarepath}/lgs8g75*
 %{_firmwarepath}/sms1xxx*
 %{_firmwarepath}/tdmb*
 %{_firmwarepath}/v4l-cx2*
 
 %changelog
+* Thu Jul 02 2026 Luke Short <ekultails@gmail.com 20260701-1
+- Update to 20260701
+
 * Thu Apr 09 2026 Luke Short <ekultails@gmail.com 20260408-1
 - Update to 20260408
 
