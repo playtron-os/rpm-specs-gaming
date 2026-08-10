@@ -1,8 +1,8 @@
 Name: udev-media-automount
 # GitVersion versioning is to show how many commits have been made to the git repository.
-Version: 0.1.0+72
+Version: 0.1.0+74
 Release: 1%{?dist}
-%define ver 1f66ea749d982b34cba3f8a4fb62ac22671dc1e1
+%define ver 5cbb0aaf56ca214e59481389c8db0449553e9d8a
 Summary: udev rules for automatically mounting filesystems
 License: BSD-2-Clause
 URL: https://github.com/playtron-os/udev-media-automount
@@ -51,6 +51,9 @@ if [ -S /run/udev/control ]; then
 fi
 
 %changelog
+* Mon Aug 10 2026 Alesh Slovak <alesh@playtron.one> 0.1.0+74-1
+- Update version
+
 * Thu Oct 09 2025 Luke Short <ekultails@gmail.com> 0.1.0+72-1
 - Update version
 
