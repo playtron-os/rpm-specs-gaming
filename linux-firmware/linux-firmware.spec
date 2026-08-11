@@ -5,8 +5,8 @@
 
 
 Name:		linux-firmware
-Version:	20260701
-%define hash 1de7df24840578efde8ea6b34d2d6809ea1b8575
+Version:	20260810
+%define hash 2135b2f7714a3a514c989b9728f51f36144cab6f
 Release:	1%{?dist}
 Summary:	Firmware files used by the Linux kernel
 License:	GPL-1.0-or-later AND GPL-2.0-or-later AND MIT AND LicenseRef-Callaway-Redistributable-no-modification-permitted
@@ -668,7 +668,9 @@ end
 %files -n qcom-firmware
 %license LICENSES/LICENSE.qcom LICENSES/LICENSE.qcom_yamato LICENSES/NOTICE.qcom
 %dir %{_firmwarepath}/qcom
+%{_firmwarepath}/qcom/eliza/
 %{_firmwarepath}/qcom/glymur/
+%{_firmwarepath}/qcom/hawi/
 %{_firmwarepath}/qcom/kaanapali/
 %{_firmwarepath}/a300_p*
 %{_firmwarepath}/qcom/*.fw*
@@ -729,6 +731,9 @@ end
 %{_firmwarepath}/v4l-cx2*
 
 %changelog
+* Tue Aug 11 2026 Luke Short <ekultails@gmail.com 20260810-1
+- Update to 20260810
+
 * Thu Jul 02 2026 Luke Short <ekultails@gmail.com 20260701-1
 - Update to 20260701
 
