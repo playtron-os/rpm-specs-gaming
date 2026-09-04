@@ -7,10 +7,10 @@
 Box64 lets you run x86_64 Linux programs (such as games) on non-x86_64 Linux
 systems, like ARM (host system needs to be 64-bit little-endian).}
 
-%define hash 384972df38d1b6be58918666def7ee9edb2437d2
+%define hash 6ff9276b1b8aacae131454482a4b68889532269a
 
 Name:           box64
-Version:        0.4.2+8461
+Version:        0.4.4+8782
 Release:        %autorelease
 Summary:        Linux userspace x86_64 emulator with a twist, targeted at ARM64
 
